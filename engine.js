@@ -24,15 +24,15 @@ const textQ = (prompt, answer, steps, extra = {}) => ({ type: 'text', prompt, an
 const norm = s => String(s).toLowerCase().replace(/\s+/g, '').replace(/[,\[\]{}()]/g, ' ').replace(/\s+/g, ',').replace(/^,|,$/g, '');
 function parseNum(s) { s = String(s).trim().replace(/,/g, ''); if (/^0b[01]+$/i.test(s)) return parseInt(s.slice(2), 2); if (/^0x[0-9a-f]+$/i.test(s)) return parseInt(s, 16); const m = s.match(/^[-+]?\d*\.?\d+(e[-+]?\d+)?/i); return m ? parseFloat(m[0]) : NaN; }
 
-/* ---------- courses: UT Dallas BS Computer Science core (2026 catalog) ---------- */
+/* ---------- courses ---------- */
 const COURSES = [
-  { id: '2325', code: 'PHYS 2325', name: 'Mechanics', color: '#FFB547', book: 'Young & Freedman, University Physics' },
-  { id: '2326', code: 'PHYS 2326', name: 'Electromagnetism & Waves', color: '#4FD1FF', book: 'Young & Freedman, University Physics' },
-  { id: '3301', code: 'EE 3301', name: 'Electrical Network Analysis', color: '#7CFF8A', book: 'Alexander & Sadiku, Fundamentals of Electric Circuits' },
-  { id: '3302', code: 'EE 3302', name: 'Signals & Systems', color: '#FF7AB6', book: 'Oppenheim & Willsky, Signals and Systems' },
-  { id: '3310', code: 'EE 3310/3311', name: 'Electronic Devices & Circuits', color: '#C49BFF', book: 'Sedra & Smith, Microelectronic Circuits' },
-  { id: '4301', code: 'EE 4301', name: 'Electromagnetic Engineering', color: '#5BE3C8', book: 'Ulaby, Fundamentals of Applied Electromagnetics' },
-  { id: '4310', code: 'EE 4310', name: 'Systems & Controls', color: '#FF9466', book: 'Nise, Control Systems Engineering' },
+  { id: '2325', code: 'PHYS 1', utd: 'PHYS 2325', name: 'Mechanics', color: '#FFB547', book: 'Young & Freedman, University Physics' },
+  { id: '2326', code: 'PHYS 2', utd: 'PHYS 2326', name: 'Electromagnetism & Waves', color: '#4FD1FF', book: 'Young & Freedman, University Physics' },
+  { id: '3301', code: 'CIRCUITS', utd: 'EE 3301', name: 'Electrical Network Analysis', color: '#7CFF8A', book: 'Alexander & Sadiku, Fundamentals of Electric Circuits' },
+  { id: '3302', code: 'SIGNALS', utd: 'EE 3302', name: 'Signals & Systems', color: '#FF7AB6', book: 'Oppenheim & Willsky, Signals and Systems' },
+  { id: '3310', code: 'ELECTRONICS', utd: 'EE 3310/3311', name: 'Electronic Devices & Circuits', color: '#C49BFF', book: 'Sedra & Smith, Microelectronic Circuits' },
+  { id: '4301', code: 'EM FIELDS', utd: 'EE 4301', name: 'Electromagnetic Engineering', color: '#5BE3C8', book: 'Ulaby, Fundamentals of Applied Electromagnetics' },
+  { id: '4310', code: 'CONTROLS', utd: 'EE 4310', name: 'Systems & Controls', color: '#FF9466', book: 'Nise, Control Systems Engineering' },
 ];
 const CH = []; // chapters pushed by content files
 const VIZ = []; // visualizers: {id, title, icon, blurb, mount(box)}
@@ -79,11 +79,11 @@ addEventListener('hashchange', route);
 /* ---------- home ---------- */
 function viewHome() {
   const total = CH.length ? Math.round(CH.reduce((s, c) => s + mastery(c.id), 0) / CH.length) : 0, next = CH.find(c => mastery(c.id) < 80) || CH[0];
-  main.innerHTML = `<section class="hero"><div class="hero-txt"><div class="kick">PHYS 2325 · 2326 · the UTD EE core</div><h1>Physics &amp; circuits, <em>drawn out</em> and worked through.</h1>
+  main.innerHTML = `<section class="hero"><div class="hero-txt"><div class="kick">calculus-based physics · the electrical engineering core</div><h1>Physics &amp; circuits, <em>drawn out</em> and worked through.</h1>
     <p>Every lesson follows the textbook section by section: the idea in plain words, numbered equations, diagrams that build up one step at a time, the exam traps in the margin, a worked example, and fresh problems. And a circuit lab where you can watch the current move.</p>
     <div class="cta"><a class="btn pri" href="#/c/${next.id}">${S.xp ? 'resume' : 'start'}: ${next.title} →</a><a class="btn" href="#/viz/circuit">⚡ open the circuit lab</a></div></div>
     <div class="plate">${typeof SCH === 'function' ? SCH(CIRCUITS.twoloop, { currents: 'i', cell: 70 }) : ''}<div class="cap"><span>FIG. 0 · two-source network, solved live</span><span>KCL ✓ KVL ✓</span></div></div></section>
-    <section class="stats"><div class="stat"><b>${CH.length}</b><span>topics</span></div><div class="stat"><b>${COURSES.filter(co => CH.some(c => c.course === co.id)).length}</b><span>UTD courses</span></div><div class="stat"><b>${VIZ.length}</b><span>simulations</span></div><div class="stat"><b>${total}%</b><span>mastered</span></div><div class="stat"><b>${S.xp}</b><span>XP</span></div></section>
+    <section class="stats"><div class="stat"><b>${CH.length}</b><span>topics</span></div><div class="stat"><b>${COURSES.filter(co => CH.some(c => c.course === co.id)).length}</b><span>courses</span></div><div class="stat"><b>${VIZ.length}</b><span>simulations</span></div><div class="stat"><b>${total}%</b><span>mastered</span></div><div class="stat"><b>${S.xp}</b><span>XP</span></div></section>
     ${COURSES.map(co => { const chs = CH.filter(c => c.course === co.id); if (!chs.length) return ''; const m = Math.round(chs.reduce((s, c) => s + mastery(c.id), 0) / chs.length);
       return `<section class="course" style="--c:${co.color}"><div class="course-h"><div><span class="code-tag">${co.code}</span><h2>${co.name}</h2><p class="book">📘 ${co.book}</p></div><div class="cm"><b>${m}%</b>${bar(m, co.color)}<a class="btn sm" href="#/exam/${co.id}">exam →</a></div></div>
         <div class="cgrid">${chs.map((c, i) => `<a class="card ${mastery(c.id) >= 80 ? 'done' : ''}" href="#/c/${c.id}" style="animation-delay:${i * 40}ms"><span class="file">${c.file}</span><b>${c.title}</b><small>${c.blurb}</small>${bar(mastery(c.id), co.color)}</a>`).join('')}</div></section>`; }).join('')}`;

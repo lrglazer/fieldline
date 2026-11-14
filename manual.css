@@ -75,3 +75,6 @@ main,.layout>main{min-width:0}
 .logo{gap:0}.logo .sym{margin-right:9px}
 .page sub,.page sup{font-size:.72em;line-height:0}.eq sub,.eq sup{font-style:italic}
 .viz-page .page::before{display:none}
+
+.sitefoot{padding:18px clamp(16px,4vw,48px) 28px;border-top:1px solid var(--line, #ccc);font-size:13px;opacity:.75;margin-left:var(--footml,0)}.sitefoot p{margin:4px 0}.sitefoot summary{cursor:pointer}
+@media (min-width:901px){.sitefoot{margin-left:270px}}

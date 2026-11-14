@@ -76,7 +76,7 @@ function fbdFig(o = {}) { const W = o.w || 520, H = o.h || 300; let s = ''; cons
 
 /* inject figures and labs into existing sections */
 const addFig = (chId, sec, html, where = 'p1') => { const c = chById(chId); if (!c) return; const L = c.learn.find(l => l.sec === sec || (l.sec || '').startsWith(sec)); if (!L) return; if (where === 'start') L.body = html + L.body; else if (where === 'end') L.body += html; else { const k = L.body.indexOf('</p>'); L.body = k < 0 ? html + L.body : L.body.slice(0, k + 4) + html + L.body.slice(k + 4); } };
-const addLab = (chId, sec, viz, vizOpts) => { const c = chById(chId); if (!c) return; const L = c.learn.find(l => (l.sec || '').startsWith(sec)); if (!L) return; if (!L.viz) { L.viz = viz; L.vizOpts = vizOpts; } else (L.more = L.more || []).push([viz, vizOpts]); };
+const addLab = (chId, sec, viz, vizOpts, first) => { const c = chById(chId); if (!c) return; const L = c.learn.find(l => (l.sec || '').startsWith(sec)); if (!L) return; if (!L.viz) { L.viz = viz; L.vizOpts = vizOpts; } else if (first) { (L.more = L.more || []).unshift([L.viz, L.vizOpts]); L.viz = viz; L.vizOpts = vizOpts; } else (L.more = L.more || []).push([viz, vizOpts]); };
 
 /* typeset x_sub and x^{sup} in lesson text (text nodes only; skips code, svg, inputs) */
 function typeset(root) { const w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, { acceptNode: n => n.parentElement.closest('pre,code,svg,script,textarea,input,.sfdata,button') ? NodeFilter.FILTER_REJECT : /[_^]/.test(n.nodeValue) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT });
