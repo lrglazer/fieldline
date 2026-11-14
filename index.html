@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Fieldline: physics and electrical engineering, one idea at a time</title>
+<meta name="description" content="Physics and electrical engineering study site built around UT Dallas PHYS 2325/2326 and the EE core: lessons with exam tricks, worked examples, endless practice, live simulations and an exam simulator.">
+<meta name="theme-color" content="#06121A">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%2306121A'/><path d='M14 50 Q32 14 50 50 T86 50' fill='none' stroke='%23FFB547' stroke-width='9' stroke-linecap='round'/></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Sora:wght@500;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="app.css?v=1">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<canvas id="bgfx" aria-hidden="true"></canvas>
+<header class="top">
+  <button class="iconbtn menu" id="menuBtn" aria-label="Open menu">☰</button>
+  <a class="logo" href="#/"><span class="sym">∿</span>Field<b>line</b></a>
+  <div class="meta"><span class="mt" title="Day streak">🔥 <b id="streak">0</b></span><span class="mt" title="XP">⚡ <b id="xp">0</b></span><span class="mt lvl" title="Level">lv <b id="lvl">1</b><i class="lbar"><i id="lvlbar"></i></i></span><button class="iconbtn" id="themeBtn" aria-label="Toggle light and dark theme">◐</button></div>
+</header>
+<div class="layout"><nav class="side" id="nav" aria-label="Topics"></nav><main id="main" tabindex="-1"></main></div>
+<noscript><p style="padding:20px">Fieldline needs JavaScript.</p></noscript>
+<script src="engine.js?v=1"></script>
+<script src="sim.js?v=1"></script>
+<script src="p1.js?v=1"></script>
+<script src="p1b.js?v=1"></script>
+<script src="fx.js?v=1"></script>
+<script>boot()</script>
+</body>
+</html>
