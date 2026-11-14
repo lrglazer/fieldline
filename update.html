@@ -1,0 +1,31 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Chalk Talk is updating</title><meta name="robots" content="noindex"><meta name="theme-color" content="#0E1013">
+<style>
+*{box-sizing:border-box}html,body{height:100%}
+body{margin:0;display:grid;place-items:center;padding:24px;background:#0E1013;color:#F4F3EF;font:500 16px/1.5 system-ui,-apple-system,'Segoe UI',sans-serif;text-align:center;overflow:hidden}
+.board{position:relative;width:min(460px,100%);padding:38px 28px 30px;border-radius:28px;background:#1d3b2c;box-shadow:inset 0 0 0 10px #6b4423,inset 0 0 0 12px #3d2612,0 30px 80px rgba(0,0,0,.5)}
+.logo{display:inline-flex;flex-direction:column;background:#FDDB25;color:#141416;font:900 15px/.95 system-ui;padding:8px 10px;border-radius:10px;transform:rotate(-5deg);box-shadow:0 6px 0 #C9A800;animation:wob 3s ease-in-out infinite}
+@keyframes wob{50%{transform:rotate(4deg) translateY(-4px)}}
+h1{margin:22px 0 6px;font:800 30px/1.15 'Comic Sans MS','Chalkboard SE','Marker Felt',system-ui;color:#F4F3EF;letter-spacing:.01em}
+h1 span{display:inline-block;animation:chalk 1.2s ease both}
+p{margin:0;color:#CFE3D6}
+.bar{margin:24px auto 0;height:12px;width:80%;border-radius:8px;background:rgba(255,255,255,.12);overflow:hidden}
+.bar i{display:block;height:100%;width:40%;border-radius:8px;background:#FDDB25;animation:load 1.6s ease-in-out infinite}
+@keyframes load{0%{transform:translateX(-110%)}100%{transform:translateX(260%)}}
+.dust{position:absolute;bottom:18px;width:4px;height:4px;border-radius:50%;background:#fff;opacity:0;animation:dust 3s ease-in infinite}
+@keyframes dust{0%{opacity:.8;transform:translateY(0)}100%{opacity:0;transform:translateY(-60px) translateX(10px)}}
+small{display:block;margin-top:18px;color:#8FB3A0;font-size:13px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}}
+</style></head><body>
+<div class="board">
+  <span class="logo"><span>chalk</span><span>talk</span></span>
+  <h1>Undergoing an update</h1>
+  <p>We're adding new things to Chalk Talk. It'll be back in a few minutes, and nothing you've saved is affected.</p>
+  <div class="bar"><i></i></div>
+  <small id="st">This page checks again on its own.</small>
+  <span class="dust" style="left:20%"></span><span class="dust" style="left:48%;animation-delay:1s"></span><span class="dust" style="left:76%;animation-delay:2s"></span>
+</div>
+<script>
+// Try again every 30 seconds. On Chalk Talk's own address this reloads; anywhere else it goes back to Chalk Talk.
+setInterval(function () { if (/chalktalkstudy\.com$/.test(location.hostname)) location.reload(); else location.href = 'https://chalktalkstudy.com/'; }, 30000);
+</script></body></html>
