@@ -37,8 +37,8 @@ body{font:17px/1.65 var(--serif);background:var(--bg);background-image:linear-gr
 :root[data-theme="dark"] .trick{background:#3A3420;color:#F1E7C2}:root[data-theme="dark"] .trick b:first-child{color:#E6C55A}
 .ex{background:none;border:1.5px solid var(--ink);border-left:6px solid var(--acc);border-radius:2px;padding:14px 18px}.ex>b:first-child{font:700 12px var(--mono);color:var(--acc);letter-spacing:1.5px}.ex p,.ex li{font-size:17px}
 .fig{margin:22px 0;text-align:center}.fig .fb{border:1.5px solid var(--ink);background:var(--panel);border-radius:4px;padding:12px;display:inline-block;max-width:100%}.fig svg{max-width:100%;height:auto;display:block;margin:auto}
-.fig figcaption{font:15px/1.5 var(--serif);color:var(--muted);margin-top:8px;text-align:left;max-width:68ch;margin-inline:auto}.fig figcaption b{font:700 13px var(--mono);color:var(--ink);margin-right:6px}
-.fig figcaption b::before{counter-increment:fig;content:"Fig. " var(--s,"") counter(fig)}
+.fig figcaption{font:15px/1.5 var(--serif);color:var(--muted);margin-top:8px;text-align:left;max-width:68ch;margin-inline:auto}.fig figcaption .fn{font:700 13px var(--mono);color:var(--ink);margin-right:8px}
+.fig figcaption .fn::before{counter-increment:fig;content:"Fig. " var(--s,"") counter(fig)}
 .widget{background:var(--panel);border:1.5px solid var(--ink);border-radius:4px}.widget .wh{font:700 13px var(--mono);color:var(--ink);background:var(--panel2);border-bottom:1.5px solid var(--ink)}
 .secq{border:1.5px dashed var(--ink);background:var(--panel2);border-radius:4px}.secqh b{color:var(--acc);font-family:var(--mono)}
 .prompt{font:18px/1.6 var(--serif)}.opt{font:16px var(--serif);background:var(--panel);border:1.5px solid var(--line)}.opt:hover:not(:disabled){border-color:var(--ink)}

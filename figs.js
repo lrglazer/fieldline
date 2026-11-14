@@ -1,10 +1,11 @@
 /* Fieldline — figure kit: captioned figures, step-through animated explanations, live schematics, field lines, FBDs, graphs. */
 'use strict';
 const K = 'var(--ink)', OR = 'var(--acc)', BL = 'var(--acc2)', RD = 'var(--bad)', MU = 'var(--muted)', GR = '#1E8A55', PA = 'var(--panel)';
-const FIG = (svg, cap) => `<figure class="fig"><div class="fb">${svg}</div>${cap ? `<figcaption><b></b>${cap}</figcaption>` : ''}</figure>`;
+const FIG = (svg, cap) => `<figure class="fig"><div class="fb">${svg}</div>${cap ? `<figcaption><span class="fn"></span>${cap}</figcaption>` : ''}</figure>`;
 const SVG = (w, h, inner, extra = '') => `<svg viewBox="0 0 ${w} ${h}" width="${w}" xmlns="http://www.w3.org/2000/svg" ${extra}>${inner}</svg>`;
 const ln = (x1, y1, x2, y2, col = K, w = 2, x = '') => `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" style="stroke:${col};stroke-width:${w};stroke-linecap:round" ${x}/>`;
-const tx = (x, y, s, o = {}) => `<text x="${x}" y="${y}" text-anchor="${o.a || 'middle'}" style="fill:${o.c || K};font:${o.it ? 'italic ' : ''}${o.w || 400} ${o.s || 16}px ${o.f || 'Source Serif 4, Georgia, serif'}" ${o.x || ''}>${s}</text>`;
+const svgSub = s => String(s).replace(/([A-Za-zθφτωΦ0-9′])_\{?([A-Za-z0-9,∞]+)\}?/g, '$1<tspan baseline-shift="sub" font-size="72%">$2</tspan>');
+const tx = (x, y, s, o = {}) => (s = svgSub(s), `<text x="${x}" y="${y}" text-anchor="${o.a || 'middle'}" style="fill:${o.c || K};font:${o.it ? 'italic ' : ''}${o.w || 400} ${o.s || 16}px ${o.f || 'Source Serif 4, Georgia, serif'}" ${o.x || ''}>${s}</text>`);
 const arr = (x1, y1, x2, y2, col = K, w = 2.4, lab, lo = {}) => { const a = Math.atan2(y2 - y1, x2 - x1), hl = 11 + w * 1.5, hw = 5 + w; const bx = x2 - hl * Math.cos(a), by = y2 - hl * Math.sin(a); let s = ln(x1, y1, bx, by, col, w, lo.x || '') + `<polygon points="${x2},${y2} ${bx - hw * Math.sin(a)},${by + hw * Math.cos(a)} ${bx + hw * Math.sin(a)},${by - hw * Math.cos(a)}" style="fill:${col}" ${lo.x || ''}/>`; if (lab) { const d = lo.d ?? 16, lx = x2 + d * Math.cos(a + (lo.side ?? 0)), ly = y2 + d * Math.sin(a + (lo.side ?? 0)) + 5; s += tx(lo.lx ?? lx, lo.ly ?? ly, lab, { c: col, it: true, s: lo.s || 17, w: 600 }); } return s; };
 const circ = (x, y, r, fill = PA, col = K, w = 2) => `<circle cx="${x}" cy="${y}" r="${r}" style="fill:${fill};stroke:${col};stroke-width:${w}"/>`;
 const pth = (d, col = K, w = 2, fill = 'none', x = '') => `<path d="${d}" style="fill:${fill};stroke:${col};stroke-width:${w};stroke-linejoin:round;stroke-linecap:round" ${x}/>`;
