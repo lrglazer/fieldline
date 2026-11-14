@@ -79,17 +79,14 @@ addEventListener('hashchange', route);
 /* ---------- home ---------- */
 function viewHome() {
   const total = CH.length ? Math.round(CH.reduce((s, c) => s + mastery(c.id), 0) / CH.length) : 0, next = CH.find(c => mastery(c.id) < 80) || CH[0];
-  main.innerHTML = `<section class="hero"><div class="hero-txt"><div class="kick">∮ physics & electrical engineering, one idea at a time</div><h1>See the field.<br>Solve the circuit.<br><span class="grad">Ace the exam.</span></h1>
-    <p>Mechanics and E&amp;M through circuits, signals, electronics, electromagnetics and controls, built around the UT Dallas physics and EE core. Each topic is a short lesson with the exam tricks built in, a worked example, and endless fresh problems. Plus live simulations you can poke at.</p>
-    <div class="cta"><a class="btn pri" href="#/c/${next.id}">${S.xp ? 'resume' : 'start'}: ${next.title} →</a><a class="btn" href="#/viz">∿ open the simulations</a></div></div>
-    <div class="scope" aria-hidden="true"><canvas id="scopeC" width="520" height="300"></canvas><div class="scopelbl"><span>CH1 2V/div</span><span>CH2 1V/div</span><span>5ms/div</span></div></div></section>
+  main.innerHTML = `<section class="hero"><div class="hero-txt"><div class="kick">PHYS 2325 · 2326 · the UTD EE core</div><h1>Physics &amp; circuits, <em>drawn out</em> and worked through.</h1>
+    <p>Every lesson follows the textbook section by section: the idea in plain words, numbered equations, diagrams that build up one step at a time, the exam traps in the margin, a worked example, and fresh problems. And a circuit lab where you can watch the current move.</p>
+    <div class="cta"><a class="btn pri" href="#/c/${next.id}">${S.xp ? 'resume' : 'start'}: ${next.title} →</a><a class="btn" href="#/viz/circuit">⚡ open the circuit lab</a></div></div>
+    <div class="plate">${typeof SCH === 'function' ? SCH(CIRCUITS.twoloop, { currents: 'i', cell: 70 }) : ''}<div class="cap"><span>FIG. 0 · two-source network, solved live</span><span>KCL ✓ KVL ✓</span></div></div></section>
     <section class="stats"><div class="stat"><b>${CH.length}</b><span>topics</span></div><div class="stat"><b>${COURSES.filter(co => CH.some(c => c.course === co.id)).length}</b><span>UTD courses</span></div><div class="stat"><b>${VIZ.length}</b><span>simulations</span></div><div class="stat"><b>${total}%</b><span>mastered</span></div><div class="stat"><b>${S.xp}</b><span>XP</span></div></section>
     ${COURSES.map(co => { const chs = CH.filter(c => c.course === co.id); if (!chs.length) return ''; const m = Math.round(chs.reduce((s, c) => s + mastery(c.id), 0) / chs.length);
       return `<section class="course" style="--c:${co.color}"><div class="course-h"><div><span class="code-tag">${co.code}</span><h2>${co.name}</h2><p class="book">📘 ${co.book}</p></div><div class="cm"><b>${m}%</b>${bar(m, co.color)}<a class="btn sm" href="#/exam/${co.id}">exam →</a></div></div>
         <div class="cgrid">${chs.map((c, i) => `<a class="card ${mastery(c.id) >= 80 ? 'done' : ''}" href="#/c/${c.id}" style="animation-delay:${i * 40}ms"><span class="file">${c.file}</span><b>${c.title}</b><small>${c.blurb}</small>${bar(mastery(c.id), co.color)}</a>`).join('')}</div></section>`; }).join('')}`;
-  const cv = $('#scopeC'), g = cv.getContext('2d'); let ph = 0; const draw = () => { if (!cv.isConnected) return; const W = cv.width, H = cv.height; g.clearRect(0, 0, W, H); g.strokeStyle = 'rgba(120,255,200,.10)'; g.lineWidth = 1; for (let x = 0; x <= W; x += W / 10) { g.beginPath(); g.moveTo(x, 0); g.lineTo(x, H); g.stroke(); } for (let y = 0; y <= H; y += H / 8) { g.beginPath(); g.moveTo(0, y); g.lineTo(W, y); g.stroke(); }
-    const tr = (f, col, w) => { g.strokeStyle = col; g.lineWidth = w; g.shadowColor = col; g.shadowBlur = 12; g.beginPath(); for (let x = 0; x <= W; x += 2) { const y = H / 2 - f(x / W * 4 * Math.PI + ph) * H * .32; x ? g.lineTo(x, y) : g.moveTo(x, y); } g.stroke(); g.shadowBlur = 0; };
-    tr(t => Math.sin(t), '#FFB547', 2.4); tr(t => 4 / Math.PI * (Math.sin(t) + Math.sin(3 * t) / 3 + Math.sin(5 * t) / 5 + Math.sin(7 * t) / 7) * .78, '#4FD1FF', 2); ph += .025; requestAnimationFrame(draw); }; draw();
 }
 function viewCourse(id) { location.hash = '#/'; }
 
@@ -106,9 +103,10 @@ function learnView(c, body) {
   let i = 0;
   const draw = () => { if (cleanup) { cleanup(); cleanup = null; } const L = c.learn[i];
     body.innerHTML = `<div class="toc">${c.learn.map((x, k) => `<button class="tocb ${k === i ? 'on' : ''}" data-k="${k}"><span>${x.sec || k + 1}</span>${x.h}</button>`).join('')}</div>
-      <article class="page"><div class="pg">section ${L.sec || i + 1} · ${i + 1} of ${c.learn.length}</div><h2>${L.h}</h2>${L.body}<div id="wbox"></div>${L.gen ? '<div class="secq"><div class="secqh"><b>✎ try it: section ' + (L.sec || i + 1) + '</b><button class="btn sm" id="sqn">↻ new problem</button></div><div id="sqb"></div></div>' : ''}
+      <article class="page lesson" style="--s:'${String(L.sec || i + 1).split(/[–-]/)[0]}.'"><div class="pg">section ${L.sec || i + 1} · ${i + 1} of ${c.learn.length}</div><h2>${L.h}</h2>${L.body}<div id="wbox"></div>${L.gen ? '<div class="secq"><div class="secqh"><b>✎ try it: section ' + (L.sec || i + 1) + '</b><button class="btn sm" id="sqn">↻ new problem</button></div><div id="sqb"></div></div>' : ''}
       <div class="pnav">${i ? '<button class="btn" id="prev">← back</button>' : '<span></span>'}${i < c.learn.length - 1 ? `<button class="btn pri" id="next">next: ${c.learn[i + 1].sec || ''} ${c.learn[i + 1].h} →</button>` : `<a class="btn pri" href="#/c/${c.id}/do">chapter practice →</a>`}</div></article>`;
     if (L.viz) { const v = VIZ.find(x => x.id === L.viz); if (v) { const b = $('#wbox'); b.className = 'widget'; b.innerHTML = `<div class="wh">∿ ${v.title}</div><div class="wb"></div>`; cleanup = v.mount($('.wb', b), L.vizOpts) || null; } }
+    if (typeof initFigs === 'function') { initFigs(body); typeset($('.page', body)); }
     if (L.gen) { const run = async () => { const q = L.gen(); q.ch = c.id; const box = $('#sqb'); box.innerHTML = qHTML(q); const r = await grade(q, box); record(c.id, r.ok, q); if (r.ok) pop('+10 XP'); showResult(q, r, box); }; run(); $('#sqn').onclick = run; }
     $$('.tocb').forEach(x => x.onclick = () => { i = +x.dataset.k; draw(); scrollTo(0, 0); });
     $('#prev') && ($('#prev').onclick = () => { i--; draw(); scrollTo(0, 0); }); $('#next') && ($('#next').onclick = () => { i++; draw(); scrollTo(0, 0); }); };
@@ -197,8 +195,8 @@ function viewViz(id) {
 function pop(t) { const p = document.createElement('div'); p.className = 'xp-pop'; p.textContent = t; document.body.appendChild(p); setTimeout(() => p.remove(), 1100); }
 function confetti() { const c = document.createElement('div'); c.className = 'confetti'; c.innerHTML = [...Array(60)].map(() => `<i style="left:${Math.random() * 100}%;background:${R.pick(['#FFB547', '#4FD1FF', '#7CFF8A', '#FF7AB6', '#C49BFF'])};animation-delay:${Math.random() * .4}s;transform:rotate(${Math.random() * 360}deg)">${R.pick(['Ω', 'V', 'μ', 'ε', '∮'])}</i>`).join(''); document.body.appendChild(c); setTimeout(() => c.remove(), 2600); }
 function boot() {
-  const th = localStorage.getItem('fl-theme'); if (th) document.documentElement.dataset.theme = th;
-  $('#themeBtn').onclick = () => { const t = document.documentElement.dataset.theme === 'light' ? 'dark' : 'light'; document.documentElement.dataset.theme = t; localStorage.setItem('fl-theme', t); };
+  const th = localStorage.getItem('fl-theme2'); if (th) document.documentElement.dataset.theme = th;
+  $('#themeBtn').onclick = () => { const t = document.documentElement.dataset.theme === 'light' ? 'dark' : 'light'; document.documentElement.dataset.theme = t; localStorage.setItem('fl-theme2', t); };
   $('#menuBtn').onclick = () => document.body.classList.toggle('menu-open');
   CH.sort((a, b) => COURSES.findIndex(x => x.id === a.course) - COURSES.findIndex(x => x.id === b.course));
   CH.forEach(c => c.file = '§ ' + (CH.filter(x => x.course === c.course).indexOf(c) + 1));
