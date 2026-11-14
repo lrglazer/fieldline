@@ -11,7 +11,7 @@ VIZ.push({ id: 'rhr', icon: '✋', title: 'Right-hand rule', color: '#4FD1FF', b
       <label id="rbL">B <select id="rb">${Object.keys(DIRS).map(d => `<option ${d === '+y' ? 'selected' : ''}>${d}</option>`).join('')}</select></label>
       <label id="rqL">charge <select id="rq"><option value="1">+q</option><option value="-1">−q (electron)</option></select></label>
       <label id="riL">current <select id="ri"><option value="1">up (+y)</option><option value="-1">down (−y)</option></select></label>
-      <button class="btn sm" id="rview">front view</button><button class="btn sm" id="rplay">↻ replay curl</button>`);
+      <label><input type="checkbox" id="rhand" checked> ✋ hand</label><button class="btn sm" id="rview">front view</button><button class="btn sm" id="rplay">↻ replay curl</button>`);
     if (opts.mode) $('#rm', k).value = opts.mode;
     const { c, g, w, h } = canvasBox(box, 720, 420), out = msg(box);
     let yaw = -.55, pitch = .38, t0 = performance.now(), raf, drag = null;
@@ -28,6 +28,7 @@ VIZ.push({ id: 'rhr', icon: '✋', title: 'Right-hand rule', color: '#4FD1FF', b
         arrow3([0, 0, 0], V3.sc(v, 1.05), '#2E6BE6', 3.5, m === 'IL' ? 'L (I)' : 'v'); arrow3([0, 0, 0], V3.sc(B, 1.05), '#1E8A55', 3.5, 'B');
         arcBetween(v, B, .55, frac, 'rgba(232,116,44,.85)');
         if (V3.len(F) > .5 && grow > 0) arrow3([0, 0, 0], V3.sc(F, 1.25 * grow), '#C8382D', 4.5, grow > .9 ? 'F' : '');
+        if ($('#rhand', k).checked && V3.len(V3.cross(v, B)) > .5) { const ua = V3.norm(v), nn = V3.norm(V3.cross(v, B)), pp = V3.norm(V3.cross(nn, ua)); drawHand(g, proj, ua, pp, nn, frac, grow, 1.6, Math.acos(Math.max(-1, Math.min(1, V3.dot(ua, V3.norm(B)))))); }
         const par = V3.len(V3.cross(v, B)) < .5; const cr = V3.cross(v, B);
         out.innerHTML = par ? `<span><b>${m === 'IL' ? 'I' : 'v'} ∥ B → F = 0</b>. The cross product of parallel vectors is zero: no magnetic force at all.</span>` :
           `<span>1. fingers along <b>${m === 'IL' ? 'I' : 'v'}</b>: ${dirName(v)}</span><span>2. curl them toward <b>B</b>: ${dirName(B)}</span><span>3. thumb: ${m === 'IL' ? 'I' : 'v'} × B = <b>${dirName(cr)}</b></span>${m === 'q' && q < 0 ? `<span>4. negative charge → <b>flip it</b>: F points ${dirName(F)}</span>` : ''}<span>|F| = ${m === 'IL' ? 'ILB' : '|q|vB'} sin 90° = ${m === 'IL' ? 'ILB' : '|q|vB'}</span>`; }
@@ -49,10 +50,10 @@ VIZ.push({ id: 'rhr', icon: '✋', title: 'Right-hand rule', color: '#4FD1FF', b
 VIZ.push({ id: 'cross', icon: '⨯', title: 'Cross product, animated', color: '#4FD1FF', blurb: 'Change the angle between two vectors and watch the cross product: perpendicular to both, direction from the right-hand rule, size equal to the parallelogram\'s area. Swap the order to see A × B = −(B × A). Drag to rotate.',
   mount(box, opts = {}) {
     const A0 = opts.A || 'A', B0 = opts.B || 'B', C0 = opts.C || 'A × B', unit = opts.unit || '';
-    const k = ctl(box, `<label>angle φ <input type="range" id="xp" min="0" max="180" value="${opts.phi ?? 60}"> <b id="xpl"></b></label><label>|${A0}| <input type="range" id="xa" min="2" max="10" value="7"></label><label>|${B0}| <input type="range" id="xb" min="2" max="10" value="6"></label><button class="btn sm" id="xs">swap order</button><button class="btn sm" id="xr">↻ replay</button><button class="btn sm" id="xv">front view</button>`);
+    const k = ctl(box, `<label>angle φ <input type="range" id="xp" min="0" max="180" value="${opts.phi ?? 60}"> <b id="xpl"></b></label><label>|${A0}| <input type="range" id="xa" min="2" max="10" value="7"></label><label>|${B0}| <input type="range" id="xb" min="2" max="10" value="6"></label><button class="btn sm" id="xs">swap order</button><button class="btn sm" id="xr">↻ replay</button><button class="btn sm" id="xv">front view</button><label><input type="checkbox" id="xh" checked> ✋ show the hand</label>`);
     const { c, g, w, h } = canvasBox(box, 720, 400), out = msg(box);
     let yaw = -.6, pitch = .42, t0 = performance.now(), raf, drag = null, swapped = false;
-    const proj = p => { const cy = Math.cos(yaw), sy = Math.sin(yaw), cp = Math.cos(pitch), sp = Math.sin(pitch); const x1 = p[0] * cy + p[2] * sy, z1 = -p[0] * sy + p[2] * cy; const y2 = p[1] * cp - z1 * sp; return [w / 2 + x1 * 120, h / 2 + 40 - y2 * 120]; };
+    const proj = p => { const cy = Math.cos(yaw), sy = Math.sin(yaw), cp = Math.cos(pitch), sp = Math.sin(pitch); const x1 = p[0] * cy + p[2] * sy, z1 = -p[0] * sy + p[2] * cy; const y2 = p[1] * cp - z1 * sp, z2 = p[1] * sp + z1 * cp; return [w / 2 + x1 * 120, h / 2 + 40 - y2 * 120, z2]; };
     const line3 = (a, b, col, lw = 1.2, dash) => { const A = proj(a), B = proj(b); g.strokeStyle = col; g.lineWidth = lw; g.setLineDash(dash || []); g.beginPath(); g.moveTo(...A); g.lineTo(...B); g.stroke(); g.setLineDash([]); };
     const arr3 = (b, col, lw, lab) => { const O = proj([0, 0, 0]), B = proj(b); if (Math.hypot(B[0] - O[0], B[1] - O[1]) > 3) arrow(g, O[0], O[1], B[0], B[1], col, lw); else { g.fillStyle = col; g.beginPath(); g.arc(B[0], B[1], 6, 0, 7); g.fill(); } if (lab) { g.fillStyle = col; g.font = 'italic 700 19px "Source Serif 4", serif'; g.fillText(lab, B[0] + 8, B[1] - 8); } };
     const draw = now => { if (!c.isConnected) return; const phi = +$('#xp', k).value * Math.PI / 180, a = +$('#xa', k).value / 7, b = +$('#xb', k).value / 7; $('#xpl', k).textContent = $('#xp', k).value + '°';
@@ -64,9 +65,24 @@ VIZ.push({ id: 'cross', icon: '⨯', title: 'Cross product, animated', color: '#
       // curl arc from first to second vector
       if (phi > .02 && phi < Math.PI - .02) { const ua = V3.norm(P), n = V3.norm(V3.cross(P, Q)), perp = V3.norm(V3.cross(n, ua)); const th = Math.acos(Math.max(-1, Math.min(1, V3.dot(ua, V3.norm(Q))))); g.strokeStyle = 'rgba(232,116,44,.9)'; g.lineWidth = 3; g.beginPath(); let last; for (let i = 0; i <= 40 * frac; i++) { const t = th * i / 40, p = proj(V3.add(V3.sc(ua, .45 * Math.cos(t)), V3.sc(perp, .45 * Math.sin(t)))); i ? g.lineTo(...p) : g.moveTo(...p); last = [p, t]; } g.stroke(); if (last && frac > .15) { const t = last[1], tan = V3.add(V3.sc(ua, -Math.sin(t)), V3.sc(perp, Math.cos(t))), p2 = proj(V3.add(V3.add(V3.sc(ua, .45 * Math.cos(t)), V3.sc(perp, .45 * Math.sin(t))), V3.sc(tan, .06))); arrow(g, last[0][0], last[0][1], p2[0], p2[1], 'rgba(232,116,44,.9)', 3); } }
       if (V3.len(C) > .01 && grow > 0) arr3(V3.sc(C, grow), '#C8382D', 4.5, grow > .9 ? (swapped ? `${B0} × ${A0}` : C0) : '');
+      if ($('#xh', k).checked && phi > .02 && phi < Math.PI - .02) { const ua = V3.norm(P), nn = V3.norm(V3.cross(P, Q)), pp = V3.norm(V3.cross(nn, ua)); drawHand(g, proj, ua, pp, nn, frac, grow, 1.6, Math.acos(Math.max(-1, Math.min(1, V3.dot(ua, V3.norm(Q)))))); }
       const mag = (+$('#xa', k).value) * (+$('#xb', k).value) * Math.sin(phi);
       out.innerHTML = `<span>|${swapped ? B0 + ' × ' + A0 : C0}| = |${A0}||${B0}| sin φ = ${$('#xa', k).value}·${$('#xb', k).value}·sin ${$('#xp', k).value}° = <b>${f3(Math.abs(mag))}${unit ? ' ' + unit : ''}</b></span><span>= area of the shaded parallelogram</span><span>direction: <b>${Math.abs(mag) < 1e-6 ? 'none (parallel → zero)' : (C[2] > 0 ? '+z, out of the page ⊙' : '−z, into the page ⊗')}</b></span>${swapped ? `<span>swapped order flips the direction: ${B0} × ${A0} = −(${A0} × ${B0})</span>` : ''}${Math.abs(phi - Math.PI / 2) < .01 ? '<span>φ = 90°: maximum</span>' : ''}`;
       raf = requestAnimationFrame(draw); };
     c.onpointerdown = e => { drag = [e.clientX, e.clientY, yaw, pitch]; c.setPointerCapture(e.pointerId); }; c.onpointermove = e => { if (!drag) return; yaw = drag[2] + (e.clientX - drag[0]) * .01; pitch = Math.max(-1.4, Math.min(1.4, drag[3] + (e.clientY - drag[1]) * .01)); }; c.onpointerup = () => drag = null; c.style.cursor = 'grab';
     $$('input', k).forEach(i => i.oninput = () => { if (i.id === 'xp') t0 = performance.now() - 1400; }); $('#xs', k).onclick = () => { swapped = !swapped; t0 = performance.now(); }; $('#xr', k).onclick = () => t0 = performance.now(); $('#xv', k).onclick = () => { yaw = 0; pitch = 0; };
     raf = requestAnimationFrame(draw); return () => cancelAnimationFrame(raf); } });
+
+/* cartoon right hand: fingers along u, curling toward perp (the second vector's side), thumb along n = u × perp */
+function drawHand(g, proj, u, perp, n, frac, thumbGrow, sc = 1, th = Math.PI / 2) {
+  const P = (a, b, c) => V3.add(V3.add(V3.sc(u, a), V3.sc(perp, b)), V3.sc(n, c)); // local coords → world
+  const caps = []; const skin = '#F2C29B', edge = '#A86F49';
+  const palm = []; for (let i = 0; i <= 20; i++) { const t = i / 20 * 2 * Math.PI; palm.push(P(-.14 * sc + .17 * sc * Math.cos(t), -.02 * sc, .15 * sc * Math.sin(t))); }
+  caps.push({ kind: 'poly', pts: palm });
+  [-.105, -.035, .035, .105].forEach((off, fi) => { const L = [.15, .17, .18, .16][fi] * sc; let pos = P(0, 0, off * sc), ang = 0; for (let s = 0; s < 3; s++) { ang += frac * th / 3; const d = V3.add(V3.sc(u, Math.cos(ang)), V3.sc(perp, Math.sin(ang))); const nxt = V3.add(pos, V3.sc(d, L)); caps.push({ kind: 'seg', a: pos, b: nxt, r: .036 * sc }); pos = nxt; } });
+  const tdir = V3.norm(V3.add(V3.sc(n, .2 + .8 * thumbGrow), V3.sc(u, 1 - thumbGrow))); const t0 = P(-.1 * sc, 0, .13 * sc), t1 = V3.add(t0, V3.sc(tdir, .16 * sc)), t2 = V3.add(t1, V3.sc(tdir, .14 * sc)); caps.push({ kind: 'seg', a: t0, b: t1, r: .045 * sc }, { kind: 'seg', a: t1, b: t2, r: .04 * sc });
+  const depth = p => proj(p)[2] || 0;
+  caps.forEach(c => c.z = c.kind === 'poly' ? depth(P(-.14 * sc, 0, 0)) - .01 : (depth(c.a) + depth(c.b)) / 2); caps.sort((a, b) => a.z - b.z);
+  const px = 125; caps.forEach(c => { if (c.kind === 'poly') { g.fillStyle = skin; g.strokeStyle = edge; g.lineWidth = 2; g.beginPath(); c.pts.forEach((p, i) => { const q = proj(p); i ? g.lineTo(q[0], q[1]) : g.moveTo(q[0], q[1]); }); g.closePath(); g.fill(); g.stroke(); return; } const A = proj(c.a), B = proj(c.b); g.lineCap = 'round'; g.strokeStyle = edge; g.lineWidth = c.r * px * 2 + 3; g.beginPath(); g.moveTo(A[0], A[1]); g.lineTo(B[0], B[1]); g.stroke(); g.strokeStyle = skin; g.lineWidth = c.r * px * 2; g.beginPath(); g.moveTo(A[0], A[1]); g.lineTo(B[0], B[1]); g.stroke(); });
+  g.lineCap = 'butt';
+}
