@@ -69,4 +69,11 @@ addFig('ns4', '4.5', FIG(plotFig([{ f: t => 1 - Math.exp(-.45 * t) * (Math.cos(1
 addFig('ss4', '4.2', FIG(plotFig([{ f: v => v < 0 ? -.2 : Math.min(9, 1e-3 * (Math.exp(v / .06) - 1)), c: OR }], { x: [-1, 1], y: [-1, 9], gx: [.7], gxl: () => '0.7 V', gy: [], xl: 'v_D', yl: 'i_D', w: 520, h: 240, draw: true }), 'The diode I–V curve: almost nothing flows until about 0.6–0.7 V, then current shoots up exponentially. That knee is why the constant-drop model (0.7 V when on) works so well.'));
 addFig('ss5', '5.1', FIG(plotFig([1, 2, 3].map((ov, k) => ({ f: v => v < ov ? ov * v - v * v / 2 : ov * ov / 2, c: [BL, OR, GR][k], lab: [3.3, ov * ov / 2 + .15, `v_OV = ${ov} V`] })).concat([{ f: v => v * v / 2, c: MU, dash: '4 4', lab: [1.4, 1.5, 'v_DS = v_OV'] }]), { x: [0, 4.6], y: [0, 5.4], gx: [1, 2, 3, 4], gy: [], xl: 'v_DS (V)', yl: 'i_D', w: 520, h: 250 }), 'MOSFET output curves. Left of the dashed parabola is the <b>triode</b> region (acts like a resistor); right of it is <b>saturation</b> (flat: a current source, where amplifiers live).'));
 addFig('ul2', '2.5', FIG(SVG(520, 150, ln(60, 50, 420, 50, K, 3) + ln(60, 110, 420, 110, K, 3) + `<rect x="430" y="58" width="22" height="44" style="fill:#F6D9C2;stroke:${K};stroke-width:2"/>` + ln(420, 50, 441, 50) + ln(441, 50, 441, 58) + ln(420, 110, 441, 110) + ln(441, 110, 441, 102) + tx(470, 85, 'Z_L', { it: true, a: 'start' }) + circ(40, 80, 16) + tx(40, 86, '~', { w: 700 }) + ln(40, 64, 40, 50) + ln(40, 50, 60, 50) + ln(40, 96, 40, 110) + ln(40, 110, 60, 110) + arr(140, 30, 300, 30, OR, 2.4, 'incident', { lx: 220, ly: 22 }) + arr(300, 132, 140, 132, BL, 2.4, 'reflected = Γ × incident', { lx: 220, ly: 148 }) + tx(240, 86, 'Z₀', { it: true })), 'A wave travels down the line and part of it bounces off any load that isn\'t matched to Z₀. The incident and reflected waves interfere to make the standing-wave pattern.'));
+addLab('yf27', '27.2', 'rhr', { mode: 'q' });
+addLab('yf27', '27.4', 'rhr', { mode: 'q', v: '+x', B: '−z (into page ⊗)' });
+addLab('yf27', '27.6', 'rhr', { mode: 'IL' });
+addLab('yf28', '28.2', 'rhr', { mode: 'wire' });
+addLab('yf28', '28.4', 'rhr', { mode: 'loop' });
+addLab('yf29', '29.3', 'rhr', { mode: 'loop' });
+addLab('ul7', '3.4', 'rhr', { mode: 'q', v: '+x', B: '+y' });
 })();
