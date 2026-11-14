@@ -34,11 +34,12 @@ VIZ.push({ id: 'rhr', icon: '✋', title: 'Right-hand rule', color: '#4FD1FF', b
           `<span>1. fingers along <b>${m === 'IL' ? 'I' : 'v'}</b>: ${dirName(v)}</span><span>2. curl them toward <b>B</b>: ${dirName(B)}</span><span>3. thumb: ${m === 'IL' ? 'I' : 'v'} × B = <b>${dirName(cr)}</b></span>${m === 'q' && q < 0 ? `<span>4. negative charge → <b>flip it</b>: F points ${dirName(F)}</span>` : ''}<span>|F| = ${m === 'IL' ? 'ILB' : '|q|vB'} sin 90° = ${m === 'IL' ? 'ILB' : '|q|vB'}</span>`; }
       else if (m === 'wire') { const I = +$('#ri', k).value; line3([0, -1.5, 0], [0, 1.5, 0], css('--ink'), 6); arrow3([0, .9 * I, 0], [0, 1.35 * I, 0], '#E8742C', 4, 'I'); const ph = el * .9 * I; g.fillStyle = '#F2B32A'; for (let s = -1.4 + ((el * .5 * I) % .25 + .25) % .25; s < 1.4; s += .25) { const P = proj([0, s, 0]); g.beginPath(); g.arc(P[0], P[1], 3, 0, 7); g.fill(); }
         [-.8, 0, .8].forEach(yy => [.45, .8].forEach(r => { g.strokeStyle = 'rgba(30,138,85,.75)'; g.lineWidth = 2; g.beginPath(); for (let a = 0; a <= 64; a++) { const t = a / 64 * 2 * Math.PI, P = proj([r * Math.cos(t), yy, r * Math.sin(t)]); a ? g.lineTo(P[0], P[1]) : g.moveTo(P[0], P[1]); } g.stroke(); for (let j = 0; j < 3; j++) { const t = -I * ph + j * 2.094, t2 = t - I * .18, P = proj([r * Math.cos(t), yy, r * Math.sin(t)]), P2 = proj([r * Math.cos(t2), yy, r * Math.sin(t2)]); arrow(g, P[0], P[1], P2[0], P2[1], '#1E8A55', 2.4); } }));
+        if ($('#rhand', k).checked) drawGrip(g, proj, [0, -.45, 0], [0, I, 0], Math.min(1, el / 1.6), 2.6, .02);
         out.innerHTML = `<span>grip the wire with your <b>right</b> hand, thumb along I (${I > 0 ? 'up' : 'down'})</span><span>fingers curl the way B circles: <b>${I > 0 ? 'counterclockwise' : 'clockwise'}</b> seen from above</span><span>B = μ₀I/(2πr): weaker farther out, so the outer rings are dimmer in real life</span>`; }
       else { const I = +$('#ri', k).value; g.strokeStyle = css('--ink'); g.lineWidth = 6; g.beginPath(); for (let a = 0; a <= 64; a++) { const t = a / 64 * 2 * Math.PI, P = proj([.7 * Math.cos(t), 0, .7 * Math.sin(t)]); a ? g.lineTo(P[0], P[1]) : g.moveTo(P[0], P[1]); } g.stroke();
         g.fillStyle = '#F2B32A'; for (let j = 0; j < 14; j++) { const t = -I * el * .8 + j * 2 * Math.PI / 14, P = proj([.7 * Math.cos(t), 0, .7 * Math.sin(t)]); g.beginPath(); g.arc(P[0], P[1], 3.5, 0, 7); g.fill(); }
         [[-.7, 1], [.7, 1]].forEach(([x0]) => { for (const r of [.25, .45]) { g.strokeStyle = 'rgba(30,138,85,.7)'; g.lineWidth = 1.8; g.beginPath(); for (let a = 0; a <= 64; a++) { const t = a / 64 * 2 * Math.PI, P = proj([x0 + r * Math.cos(t), r * Math.sin(t), 0]); a ? g.lineTo(P[0], P[1]) : g.moveTo(P[0], P[1]); } g.stroke(); } });
-        arrow3([0, -1.1 * I, 0], [0, 1.35 * I, 0], '#1E8A55', 4, 'B'); out.innerHTML = `<span>curl your right fingers along the current (the moving dots)</span><span>your thumb points along <b>B through the center</b>: ${I > 0 ? '+y (up)' : '−y (down)'}</span><span>the loop acts like a bar magnet: B exits the <b>N</b> face</span>`; }
+        arrow3([0, -1.1 * I, 0], [0, 1.35 * I, 0], '#1E8A55', 4, 'B'); if ($('#rhand', k).checked) drawGrip(g, proj, [0, .1, 0], [0, I, 0], Math.min(1, el / 1.6), 2.2, .02); out.innerHTML = `<span>curl your right fingers along the current (the moving dots)</span><span>your thumb points along <b>B through the center</b>: ${I > 0 ? '+y (up)' : '−y (down)'}</span><span>the loop acts like a bar magnet: B exits the <b>N</b> face</span>`; }
       raf = requestAnimationFrame(draw); };
     c.onpointerdown = e => { drag = [e.clientX, e.clientY, yaw, pitch]; c.setPointerCapture(e.pointerId); };
     c.onpointermove = e => { if (!drag) return; yaw = drag[2] + (e.clientX - drag[0]) * .01; pitch = Math.max(-1.4, Math.min(1.4, drag[3] + (e.clientY - drag[1]) * .01)); };
@@ -84,5 +85,22 @@ function drawHand(g, proj, u, perp, n, frac, thumbGrow, sc = 1, th = Math.PI / 2
   const depth = p => proj(p)[2] || 0;
   caps.forEach(c => c.z = c.kind === 'poly' ? depth(P(-.14 * sc, 0, 0)) - .01 : (depth(c.a) + depth(c.b)) / 2); caps.sort((a, b) => a.z - b.z);
   const px = 125; caps.forEach(c => { if (c.kind === 'poly') { g.fillStyle = skin; g.strokeStyle = edge; g.lineWidth = 2; g.beginPath(); c.pts.forEach((p, i) => { const q = proj(p); i ? g.lineTo(q[0], q[1]) : g.moveTo(q[0], q[1]); }); g.closePath(); g.fill(); g.stroke(); return; } const A = proj(c.a), B = proj(c.b); g.lineCap = 'round'; g.strokeStyle = edge; g.lineWidth = c.r * px * 2 + 3; g.beginPath(); g.moveTo(A[0], A[1]); g.lineTo(B[0], B[1]); g.stroke(); g.strokeStyle = skin; g.lineWidth = c.r * px * 2; g.beginPath(); g.moveTo(A[0], A[1]); g.lineTo(B[0], B[1]); g.stroke(); });
+  g.lineCap = 'butt';
+}
+
+/* gripping right hand: thumb along axis a, fingers wrap around it counterclockwise (seen from the thumb tip) */
+function drawGrip(g, proj, center, a, frac, sc = 1, r = .09) {
+  a = V3.norm(a); const ref = Math.abs(a[0]) < .9 ? [1, 0, 0] : [0, 0, 1]; const p1 = V3.norm(V3.cross(a, ref)), p2 = V3.cross(a, p1);
+  const at = (t, rr, hh) => V3.add(center, V3.add(V3.add(V3.sc(p1, rr * Math.cos(t)), V3.sc(p2, rr * Math.sin(t))), V3.sc(a, hh)));
+  const skin = '#F2C29B', edge = '#A86F49', segs = [];
+  // view direction (to put the palm on the far side so the wrapping fingers face the viewer)
+  const t0 = Math.PI * .15;
+  // palm block behind the wire
+  const palm = []; for (let i = 0; i <= 20; i++) { const t = i / 20 * 2 * Math.PI; palm.push(V3.add(at(t0 + Math.PI, (r + .07) * sc, 0), V3.add(V3.sc(a, .19 * sc * Math.sin(t)), V3.sc(p1, .05 * sc * Math.cos(t))))); }
+  const fr = .03 * sc; [-.135, -.045, .045, .135].forEach((h, k) => { const span = (Math.PI * 1.55) * Math.min(1, frac * 1.15 - k * .04); let prev = at(t0 + Math.PI, (r + .05) * sc, h * sc); const N = 10; for (let i = 1; i <= N; i++) { const t = t0 + Math.PI + span * i / N; const p = at(t, (r + .045) * sc, h * sc); segs.push({ a: prev, b: p, r: fr }); prev = p; } });
+  const th0 = V3.add(at(t0 + Math.PI, (r + .07) * sc, .17 * sc), [0, 0, 0]), th1 = V3.add(th0, V3.sc(a, .22 * sc)); segs.push({ a: th0, b: th1, r: .04 * sc });
+  const z = p => proj(p)[2] || 0; segs.forEach(s => s.z = (z(s.a) + z(s.b)) / 2); const pz = z(at(t0 + Math.PI, r + .07, 0));
+  const all = [{ poly: palm, z: pz - .02 }, ...segs].sort((x, y) => x.z - y.z); const px = 125;
+  all.forEach(s => { if (s.poly) { g.fillStyle = skin; g.strokeStyle = edge; g.lineWidth = 2; g.beginPath(); s.poly.forEach((p, i) => { const q = proj(p); i ? g.lineTo(q[0], q[1]) : g.moveTo(q[0], q[1]); }); g.closePath(); g.fill(); g.stroke(); return; } const A = proj(s.a), B = proj(s.b); g.lineCap = 'round'; g.strokeStyle = edge; g.lineWidth = s.r * px * 2 + 3; g.beginPath(); g.moveTo(A[0], A[1]); g.lineTo(B[0], B[1]); g.stroke(); g.strokeStyle = skin; g.lineWidth = s.r * px * 2; g.beginPath(); g.moveTo(A[0], A[1]); g.lineTo(B[0], B[1]); g.stroke(); });
   g.lineCap = 'butt';
 }

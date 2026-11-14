@@ -85,4 +85,7 @@ addLab('yf28', '28.2', 'cross', { A: 'dl', B: 'r̂', C: 'dB ∝ dl × r̂', phi:
 addLab('yf32', '32.1', 'cross', { A: 'E', B: 'B', C: 'S ∝ E × B', phi: 90 });
 addLab('ul7', '7.2', 'cross', { A: 'E', B: 'H', C: 'S = E × H', phi: 90 });
 addLab('ul7', '3.4', 'cross', { A: 'A', B: 'B', C: 'A × B' });
+addLab('yf28', '28.6', 'rhr', { mode: 'wire' }, true);
+addLab('yf30', '30.2', 'rhr', { mode: 'loop' });
+addLab('yf29', '30.2', 'rhr', { mode: 'loop' });
 })();
