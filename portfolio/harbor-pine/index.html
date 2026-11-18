@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta name="robots" content="noindex">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Harbor &amp; Pine Dental · Family &amp; Cosmetic Dentistry</title>
+<meta name="description" content="Sample website for a fictional dental practice. Designed and built by Leya Glazer.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap" rel="stylesheet">
+<style>
+:root{--cream:#f7f3ec;--sand:#ece4d6;--sage:#5f7f6e;--sage2:#dfe8e1;--deep:#1f3a33;--ink:#22302b;--mut:#6b7a73;--gold:#c79a5b;--d:'DM Serif Display',Georgia,serif;--b:'DM Sans',system-ui,sans-serif}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;overflow-x:clip}
+body{background:var(--cream);color:var(--ink);font-family:var(--b);overflow-x:clip;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:1160px;margin:0 auto;padding:0 26px}
+.sample{background:var(--deep);color:#dfe8e1;text-align:center;font-size:.78rem;padding:8px 14px;letter-spacing:.02em}
+nav{position:sticky;top:0;z-index:30;background:rgba(247,243,236,.88);backdrop-filter:blur(10px);border-bottom:1px solid rgba(31,58,51,.08)}
+nav .wrap{display:flex;align-items:center;justify-content:space-between;height:74px}
+.logo{display:flex;align-items:center;gap:12px;font-family:var(--d);font-size:1.4rem;color:var(--deep)}
+.logo svg{width:34px;height:34px}
+.links{display:flex;gap:28px;font-size:.95rem;color:var(--ink)}
+.links a{position:relative}.links a::after{content:"";position:absolute;left:0;right:100%;bottom:-6px;height:2px;background:var(--sage);transition:right .3s}.links a:hover::after{right:0}
+.cta{display:inline-flex;align-items:center;gap:10px;padding:13px 22px;border-radius:999px;background:var(--deep);color:#fff;font-weight:500;font-size:.95rem;transition:.3s;border:0;cursor:pointer}
+.cta:hover{background:var(--sage);transform:translateY(-2px)}
+.cta.light{background:transparent;color:var(--deep);border:1.5px solid var(--deep)}
+@media(max-width:860px){.links{display:none}}
+/* hero */
+.hero{padding:70px 0 40px;display:grid;grid-template-columns:1.05fr .95fr;gap:50px;align-items:center}
+@media(max-width:900px){.hero{grid-template-columns:1fr}}
+.eyebrow{display:inline-flex;align-items:center;gap:10px;font-size:.82rem;color:var(--sage);font-weight:500;letter-spacing:.04em}
+.eyebrow i{width:8px;height:8px;border-radius:50%;background:#4caf7d;box-shadow:0 0 0 4px rgba(76,175,125,.2);animation:pu 2s infinite}
+@keyframes pu{50%{box-shadow:0 0 0 9px rgba(76,175,125,0)}}
+h1{font-family:var(--d);font-weight:400;font-size:clamp(3rem,6.6vw,5.6rem);line-height:1;letter-spacing:-.02em;color:var(--deep);margin:18px 0 22px}
+h1 em{color:var(--sage);font-style:italic}
+.hero p{font-size:1.15rem;line-height:1.65;color:var(--mut);max-width:500px}
+.hbtns{display:flex;gap:12px;margin-top:30px;flex-wrap:wrap}
+.trust{display:flex;gap:26px;margin-top:38px;flex-wrap:wrap;font-size:.86rem;color:var(--mut)}
+.trust b{display:block;font-family:var(--d);font-size:1.7rem;color:var(--deep);font-weight:400}
+.art{position:relative;aspect-ratio:1;max-width:520px;justify-self:center;width:100%}
+.arches{position:absolute;inset:0;width:100%;height:100%;border-radius:36px;box-shadow:0 40px 80px -50px rgba(31,58,51,.5)}
+.arches .sun{animation:rise 9s ease-in-out infinite alternate}
+@keyframes rise{to{transform:translateY(-14px)}}
+.art svg.tooth{position:absolute;inset:16%;width:68%;height:68%;filter:drop-shadow(0 30px 40px rgba(31,58,51,.25));animation:fl 6s ease-in-out infinite}
+@keyframes fl{50%{transform:translateY(-12px)}}
+.tooth .shine{animation:sh 3.5s ease-in-out infinite}
+@keyframes sh{0%,60%,100%{opacity:0}75%{opacity:1}}
+.chip{position:absolute;background:#fff;border-radius:14px;padding:12px 16px;box-shadow:0 20px 40px -20px rgba(31,58,51,.35);font-size:.84rem;display:flex;gap:12px;align-items:center}
+.chip b{display:block;color:var(--deep)}.chip small{color:var(--mut)}
+.chip .ic{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:var(--sage2);color:var(--sage);font-weight:700}
+.c1{left:-5%;top:14%}.c2{right:-4%;bottom:12%}
+/* marquee */
+.ins{border-top:1px solid rgba(31,58,51,.1);border-bottom:1px solid rgba(31,58,51,.1);overflow:hidden;padding:18px 0;margin-top:40px;background:var(--sand)}
+.ins div{display:flex;gap:56px;width:max-content;animation:mq 34s linear infinite;font-family:var(--d);font-size:1.3rem;color:var(--sage)}
+@keyframes mq{to{transform:translateX(-50%)}}
+section{padding:100px 0}
+.sh{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap;margin-bottom:40px}
+h2{font-family:var(--d);font-weight:400;font-size:clamp(2.4rem,5vw,3.8rem);line-height:1.02;color:var(--deep);letter-spacing:-.015em}
+h2 em{color:var(--sage)}
+.sh p{max-width:420px;color:var(--mut);line-height:1.6}
+/* services */
+.svc{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+@media(max-width:900px){.svc{grid-template-columns:1fr 1fr}}@media(max-width:560px){.svc{grid-template-columns:1fr}}
+.s{background:#fff;border-radius:26px;padding:30px;position:relative;overflow:hidden;transition:transform .4s cubic-bezier(.2,.8,.2,1),box-shadow .4s;cursor:default}
+.s:hover{transform:translateY(-6px);box-shadow:0 30px 60px -30px rgba(31,58,51,.35)}
+.s::after{content:"";position:absolute;right:-60px;bottom:-60px;width:160px;height:160px;border-radius:50%;background:var(--sage2);transition:transform .5s}
+.s:hover::after{transform:scale(1.6)}
+.s .n{font-family:var(--d);font-size:1rem;color:var(--gold)}
+.s h3{font-family:var(--d);font-weight:400;font-size:1.7rem;color:var(--deep);margin:14px 0 10px;position:relative;z-index:1}
+.s p{color:var(--mut);line-height:1.6;position:relative;z-index:1}
+.s ul{list-style:none;margin-top:16px;display:flex;gap:6px;flex-wrap:wrap;position:relative;z-index:1}
+.s li{font-size:.76rem;padding:5px 10px;border-radius:999px;background:var(--cream);color:var(--sage)}
+/* booking */
+.book{background:var(--deep);color:#eef3ef;border-radius:36px;padding:56px;display:grid;grid-template-columns:.9fr 1.1fr;gap:50px;position:relative;overflow:hidden}
+@media(max-width:900px){.book{grid-template-columns:1fr;padding:34px 24px}}
+.book::before{content:"";position:absolute;right:-120px;top:-120px;width:360px;height:360px;border-radius:50%;background:radial-gradient(circle,rgba(199,154,91,.35),transparent 70%)}
+.book h2{color:#fff}.book h2 em{color:var(--gold)}
+.book p{color:#b9cbc2;line-height:1.6;margin-top:16px;max-width:380px}
+.panel{background:#fff;color:var(--ink);border-radius:24px;padding:26px;position:relative}
+.lbl{font-size:.78rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--mut);margin:16px 0 10px}
+.lbl:first-child{margin-top:0}
+.opts{display:flex;gap:8px;flex-wrap:wrap}
+.o{padding:10px 14px;border-radius:12px;border:1.5px solid #e2ddd3;background:#fff;font:inherit;font-size:.9rem;cursor:pointer;transition:.2s;color:var(--ink)}
+.o:hover{border-color:var(--sage)}
+.o.on{background:var(--deep);border-color:var(--deep);color:#fff}
+.days{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.day{padding:10px 0;border-radius:12px;border:1.5px solid #e2ddd3;background:#fff;cursor:pointer;text-align:center;font:inherit;color:var(--ink);transition:.2s}
+.day small{display:block;font-size:.7rem;color:var(--mut)}.day b{font-size:1.05rem}
+.day.on{background:var(--deep);border-color:var(--deep);color:#fff}.day.on small{color:#b9cbc2}
+.day:disabled{opacity:.35;cursor:not-allowed}
+.sum{margin-top:20px;padding:16px;border-radius:16px;background:var(--cream);display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;font-size:.92rem}
+.done{display:none;text-align:center;padding:30px 10px}.done.on{display:block;animation:pop .5s cubic-bezier(.2,1.4,.4,1)}
+@keyframes pop{from{transform:scale(.9);opacity:0}}
+.done svg{width:70px;height:70px}.done svg path{stroke-dasharray:60;stroke-dashoffset:60;animation:dr .6s .2s forwards}@keyframes dr{to{stroke-dashoffset:0}}
+.done h3{font-family:var(--d);font-weight:400;font-size:1.8rem;color:var(--deep);margin:10px 0 6px}
+/* team */
+.team{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+@media(max-width:900px){.team{grid-template-columns:1fr}}
+.t{border-radius:26px;overflow:hidden;background:#fff}
+.t .ph{aspect-ratio:4/3;display:grid;place-items:center;font-family:var(--d);font-size:4.4rem;color:#fff;position:relative;overflow:hidden}
+.t .ph::after{content:"";position:absolute;inset:0;background:radial-gradient(circle at 30% 20%,rgba(255,255,255,.35),transparent 50%)}
+.t .in{padding:22px}.t h3{font-family:var(--d);font-weight:400;font-size:1.5rem;color:var(--deep)}.t small{color:var(--sage);font-weight:500}.t p{color:var(--mut);line-height:1.6;margin-top:10px;font-size:.95rem}
+/* visit */
+.visit{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+@media(max-width:900px){.visit{grid-template-columns:1fr}}
+.map{border-radius:26px;overflow:hidden;background:#dfe8e1;min-height:340px;position:relative}
+.map svg{width:100%;height:100%;position:absolute;inset:0}
+.pin{position:absolute;left:52%;top:46%;transform:translate(-50%,-100%)}
+.pin i{display:block;width:22px;height:22px;border-radius:50% 50% 50% 0;background:var(--deep);transform:rotate(-45deg);box-shadow:0 10px 20px rgba(0,0,0,.25)}
+.pin::after{content:"";position:absolute;left:50%;top:100%;width:40px;height:40px;margin:-14px 0 0 -20px;border-radius:50%;border:2px solid var(--deep);animation:rp 2s infinite;opacity:0}
+@keyframes rp{0%{transform:scale(.3);opacity:.8}100%{transform:scale(1.6);opacity:0}}
+.info{background:#fff;border-radius:26px;padding:34px}
+.hours{width:100%;border-collapse:collapse;margin-top:14px}
+.hours td{padding:11px 0;border-bottom:1px solid #eee7da;font-size:.96rem}.hours td:last-child{text-align:right;color:var(--mut)}
+.hours tr.today td{color:var(--deep);font-weight:700}
+.open{display:inline-flex;align-items:center;gap:8px;font-size:.85rem;font-weight:500;padding:6px 12px;border-radius:999px}
+/* faq */
+.faq details{border-bottom:1px solid rgba(31,58,51,.15);padding:22px 0}
+.faq summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;gap:20px;font-family:var(--d);font-size:1.45rem;color:var(--deep)}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary span{transition:transform .3s;color:var(--sage)}.faq details[open] summary span{transform:rotate(45deg)}
+.faq details p{color:var(--mut);line-height:1.7;margin-top:12px;max-width:760px}
+footer{background:var(--deep);color:#b9cbc2;padding:60px 0 30px}
+footer .wrap{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:40px}
+@media(max-width:800px){footer .wrap{grid-template-columns:1fr}}
+footer h4{color:#fff;font-family:var(--d);font-weight:400;font-size:1.3rem;margin-bottom:12px}
+footer p,footer a{font-size:.92rem;line-height:1.9}
+.legal{max-width:1160px;margin:40px auto 0;padding:20px 26px 0;border-top:1px solid rgba(255,255,255,.1);font-size:.8rem;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.rv{opacity:0;transform:translateY(30px);transition:1s cubic-bezier(.2,.8,.2,1)}.rv.in{opacity:1;transform:none}
+</style>
+</head>
+<body>
+<div class="sample">Sample website for a fictional business, created as a design example. Harbor &amp; Pine Dental is not a real practice.</div>
+<nav><div class="wrap"><a href="#" class="logo"><svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="19" fill="#1f3a33"/><path d="M13 14c2-3 5-2 7-1 2-1 5-2 7 1 2 3 0 7-1 10-1 4-2 7-3 7s-1-5-3-5-2 5-3 5-2-3-3-7c-1-3-3-7-1-10z" fill="#f7f3ec"/></svg>Harbor &amp; Pine</a>
+<div class="links"><a href="#services">Services</a><a href="#team">Our team</a><a href="#visit">Visit</a><a href="#faq">FAQ</a></div><a class="cta" href="#book">Book a visit</a></div></nav>
+
+<div class="wrap">
+<header class="hero">
+  <div>
+    <div class="eyebrow"><i></i>Accepting new patients this week</div>
+    <h1>Gentle dentistry for the <em>whole family.</em></h1>
+    <p>Cleanings, fillings, braces and cosmetic care in one calm, modern office. We run on time, we explain everything first, and we never rush you.</p>
+    <div class="hbtns"><a class="cta" href="#book">Book online in 60 seconds →</a><a class="cta light" href="tel:5555550142">(555) 555‑0142</a></div>
+    <div class="trust"><div><b>Same‑week</b>appointments</div><div><b>Evenings</b>Tue &amp; Thu</div><div><b>Most</b>insurance accepted</div></div>
+  </div>
+  <div class="art">
+    <svg class="arches" viewBox="0 0 500 500" aria-hidden="true"><defs>
+      <linearGradient id="a1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#dfe8e1"/><stop offset="1" stop-color="#b9cdc0"/></linearGradient>
+      <linearGradient id="a2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5f7f6e"/><stop offset="1" stop-color="#1f3a33"/></linearGradient>
+      <linearGradient id="a3" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ece4d6"/><stop offset="1" stop-color="#d9c9ae"/></linearGradient></defs>
+      <rect x="0" y="0" width="500" height="500" rx="36" fill="#efe9de"/>
+      <circle class="sun" cx="350" cy="150" r="54" fill="#c79a5b" opacity=".85"/>
+      <path d="M40 470V250a110 110 0 0 1 220 0v220z" fill="url(#a1)"/>
+      <path d="M200 470V200a120 120 0 0 1 240 0v270z" fill="url(#a2)"/>
+      <path d="M120 470V330a70 70 0 0 1 140 0v140z" fill="url(#a3)"/>
+      <path d="M0 470h500" stroke="#1f3a33" stroke-opacity=".15" stroke-width="2"/>
+    </svg>
+    <div class="chip c1"><div class="ic"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></div><div><b>Next opening</b><small id="nextOpen">Tomorrow, 9:30 AM</small></div></div>
+    <div class="chip c2"><div class="ic"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/><path d="M9 12l2 2 4-4"/></svg></div><div><b>In-network</b><small>Most PPO plans accepted</small></div></div>
+  </div>
+</header>
+</div>
+<div class="ins"><div id="insT"></div></div>
+
+<section id="services"><div class="wrap">
+  <div class="sh rv"><h2>Comprehensive care, <em>under one roof.</em></h2><p>From a child’s first visit to a complete smile makeover, our team handles it here. No bouncing between offices.</p></div>
+  <div class="svc">
+    <div class="s rv"><div class="n">01</div><h3>Preventive care</h3><p>Exams, cleanings and digital X‑rays with up to 80% less radiation than film.</p><ul><li>Cleanings</li><li>Sealants</li><li>Fluoride</li></ul></div>
+    <div class="s rv"><div class="n">02</div><h3>Family &amp; kids</h3><p>Age-appropriate care for children, with appointments that can be scheduled alongside parents.</p><ul><li>First visits</li><li>Habit coaching</li></ul></div>
+    <div class="s rv"><div class="n">03</div><h3>Cosmetic</h3><p>Whitening, veneers and bonding, planned with a digital preview before we begin.</p><ul><li>Whitening</li><li>Veneers</li><li>Bonding</li></ul></div>
+    <div class="s rv"><div class="n">04</div><h3>Clear aligners</h3><p>Straighten teeth discreetly, with check-ins that fit around school and work.</p><ul><li>Aligners</li><li>Retainers</li></ul></div>
+    <div class="s rv"><div class="n">05</div><h3>Restorative</h3><p>Tooth-colored fillings, crowns and implants designed to look natural and last.</p><ul><li>Crowns</li><li>Implants</li><li>Bridges</li></ul></div>
+    <div class="s rv"><div class="n">06</div><h3>Emergencies</h3><p>Toothache or a chipped tooth? Call us. We hold same-day emergency slots every weekday.</p><ul><li>Same day</li><li>Pain relief</li></ul></div>
+  </div>
+</div></section>
+
+<div class="wrap" id="book"><div class="book rv">
+  <div><h2>Request an <em>appointment</em></h2><p>Pick what you need and a time that works. We’ll confirm by text and send forms ahead, so check-in takes seconds.</p><p style="font-size:.85rem;opacity:.7">This is a demo booking form. No appointment is actually made.</p></div>
+  <div class="panel">
+    <div id="form">
+      <div class="lbl">I’m coming in for</div><div class="opts" id="reason"><button class="o on">Cleaning &amp; exam</button><button class="o">Tooth pain</button><button class="o">Cosmetic consult</button><button class="o">Kids’ visit</button></div>
+      <div class="lbl">Day</div><div class="days" id="days"></div>
+      <div class="lbl">Time</div><div class="opts" id="times"></div>
+      <div class="sum"><span id="sumTxt"></span><button class="cta" id="confirm">Confirm</button></div>
+    </div>
+    <div class="done" id="done"><svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="28" fill="#dfe8e1"/><path d="M18 31l8 8 16-17" stroke="#1f3a33" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg><h3>Request received</h3><p id="doneTxt" style="color:var(--mut)"></p><button class="cta light" id="again" style="margin-top:16px">Book another</button></div>
+  </div>
+</div></div>
+
+<section id="team"><div class="wrap">
+  <div class="sh rv"><h2>Meet our <em>team</em></h2><p>Fictional team members for this sample site.</p></div>
+  <div class="team">
+    <div class="t rv"><div class="ph" style="background:linear-gradient(135deg,#5f7f6e,#1f3a33)">MR</div><div class="in"><h3>Dr. Maya Reyes</h3><small>General &amp; cosmetic dentist</small><p>Provides general and cosmetic dentistry and reviews every treatment plan with patients in detail.</p></div></div>
+    <div class="t rv"><div class="ph" style="background:linear-gradient(135deg,#c79a5b,#8a6436)">JO</div><div class="in"><h3>Dr. James Okafor</h3><small>Pediatric &amp; family care</small><p>Focuses on preventive care for children and families, from first visits through the teen years.</p></div></div>
+    <div class="t rv"><div class="ph" style="background:linear-gradient(135deg,#8fa9b8,#3d5a6c)">LC</div><div class="in"><h3>Lena Cho, RDH</h3><small>Lead hygienist</small><p>Leads our hygiene program, with a focus on gentle cleanings and periodontal health.</p></div></div>
+  </div>
+</div></section>
+
+<section id="visit" style="padding-top:0"><div class="wrap">
+  <div class="sh rv"><h2>Visit <em>the office</em></h2></div>
+  <div class="visit">
+    <div class="map rv"><svg viewBox="0 0 600 400" preserveAspectRatio="xMidYMid slice"><rect width="600" height="400" fill="#dfe8e1"/><path d="M0 120 Q200 90 600 160" stroke="#fff" stroke-width="26" fill="none"/><path d="M320 0 Q300 200 360 400" stroke="#fff" stroke-width="20" fill="none"/><path d="M0 300 L600 260" stroke="#fff" stroke-width="12" fill="none"/><path d="M90 0 L140 400" stroke="#fff" stroke-width="10" fill="none"/><circle cx="470" cy="320" r="70" fill="#c9d9cf"/><rect x="180" y="190" width="80" height="50" rx="8" fill="#c9d9cf"/><text x="440" y="324" font-family="DM Sans" font-size="13" fill="#5f7f6e">Pine Park</text></svg><div class="pin"><i></i></div></div>
+    <div class="info rv"><h3 style="font-family:var(--d);font-weight:400;font-size:1.8rem;color:var(--deep)">Harbor &amp; Pine Dental</h3><p style="color:var(--mut);margin-top:6px">123 Example Street, Suite 200 · Anytown</p><div style="margin-top:14px"><span class="open" id="openNow"></span></div>
+      <table class="hours" id="hours"></table><a class="cta" href="#book" style="margin-top:22px">Book a visit</a></div>
+  </div>
+</div></section>
+
+<section id="faq" style="padding-top:0"><div class="wrap faq">
+  <div class="sh rv"><h2>Frequently asked <em>questions</em></h2></div>
+  <details class="rv"><summary>Do you take my insurance?<span>+</span></summary><p>We work with most major PPO plans and file claims for you. Send us your plan before your visit, and we’ll explain your coverage in plain language before any treatment.</p></details>
+  <details class="rv"><summary>I haven’t been to a dentist in years. Is that okay?<span>+</span></summary><p>Yes. We begin with a comprehensive exam, review the findings with you, and build a treatment plan at a pace that works for you.</p></details>
+  <details class="rv"><summary>What if I have a dental emergency?<span>+</span></summary><p>Call us first thing. We keep same-day emergency slots open every weekday for pain, swelling, and broken or knocked-out teeth.</p></details>
+  <details class="rv"><summary>Can I bring my kids to the same office?<span>+</span></summary><p>Yes. Families can book back-to-back appointments, so everyone is in and out in one trip.</p></details>
+</div></section>
+
+<footer><div class="wrap"><div><h4>Harbor &amp; Pine Dental</h4><p>Gentle family and cosmetic dentistry. A fictional practice shown as a website design sample.</p></div><div><h4>Visit</h4><p>123 Example Street, Suite 200<br>Anytown</p></div><div><h4>Contact</h4><p><a href="tel:5555550142">(555) 555‑0142</a><br>hello@example.com</p></div></div>
+<div class="legal"><span>Sample website for a fictional business. Not a real dental practice.</span><span>Designed &amp; built by Leya Glazer · 2026</span></div></footer>
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.12});$$('.rv').forEach((e,i)=>{e.style.transitionDelay=(i%3)*90+'ms';io.observe(e)});
+const ins=['Delta Dental','Cigna','MetLife','Aetna','Guardian','United Concordia','Humana','Ameritas'];$('#insT').innerHTML=[...ins,...ins].map(n=>`<span>${n} ✦</span>`).join('');
+// hours + open now
+const H=[['Sunday',null],['Monday',[8,17]],['Tuesday',[8,19]],['Wednesday',[8,17]],['Thursday',[8,19]],['Friday',[8,15]],['Saturday',[9,13]]];
+const now=new Date(),d=now.getDay(),h=now.getHours()+now.getMinutes()/60;
+$('#hours').innerHTML=H.map(([n,t],i)=>`<tr class="${i===d?'today':''}"><td>${n}</td><td>${t?`${fm(t[0])} – ${fm(t[1])}`:'Closed'}</td></tr>`).join('');
+function fm(x){const hh=Math.floor(x),ap=hh>=12?'PM':'AM';return `${(hh+11)%12+1}:00 ${ap}`}
+const isOpen=H[d][1]&&h>=H[d][1][0]&&h<H[d][1][1];const o=$('#openNow');o.textContent=isOpen?'● Open now':'● Closed now · opens next business day';o.style.background=isOpen?'#e3f3ea':'#f5ece0';o.style.color=isOpen?'#2c8a58':'#a0702e';
+// booking widget
+const days=[];for(let i=1;days.length<7;i++){const dt=new Date();dt.setDate(dt.getDate()+i);if(dt.getDay()!==0)days.push(dt)}
+let sel={reason:'Cleaning & exam',day:0,time:null};
+$('#days').innerHTML=days.map((dt,i)=>`<button class="day${i===0?' on':''}" data-i="${i}"><small>${dt.toLocaleDateString('en-US',{weekday:'short'})}</small><b>${dt.getDate()}</b></button>`).join('');
+function times(){const dt=days[sel.day],sat=dt.getDay()===6,base=sat?[9,9.5,10,11,12]:[8,9.5,10.5,12,13.5,15,16];const seed=dt.getDate();const t=base.filter((_,k)=>(k*7+seed)%4!==0);
+ $('#times').innerHTML=t.map(x=>`<button class="o" data-t="${x}">${Math.floor((x+11)%12)+1}:${x%1?'30':'00'} ${x>=12?'PM':'AM'}</button>`).join('');sel.time=null;
+ $$('#times .o').forEach(b=>b.onclick=()=>{$$('#times .o').forEach(z=>z.classList.toggle('on',z===b));sel.time=b.textContent;sum()});sum()}
+function sum(){const dt=days[sel.day];$('#sumTxt').innerHTML=`<b>${sel.reason}</b><br>${dt.toLocaleDateString('en-US',{weekday:'long',month:'short',day:'numeric'})}${sel.time?' · '+sel.time:' · pick a time'}`;$('#confirm').disabled=!sel.time;$('#confirm').style.opacity=sel.time?1:.4}
+$$('#reason .o').forEach(b=>b.onclick=()=>{$$('#reason .o').forEach(z=>z.classList.toggle('on',z===b));sel.reason=b.textContent;sum()});
+$$('#days .day').forEach(b=>b.onclick=()=>{$$('#days .day').forEach(z=>z.classList.toggle('on',z===b));sel.day=+b.dataset.i;times()});
+$('#confirm').onclick=()=>{if(!sel.time)return;$('#form').style.display='none';$('#done').classList.add('on');$('#doneTxt').textContent=`${sel.reason} on ${days[sel.day].toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'})} at ${sel.time}. (Demo only. No real appointment was booked.)`};
+$('#again').onclick=()=>{$('#form').style.display='';$('#done').classList.remove('on');times()};
+times();const n0=days[0];$('#nextOpen').textContent=`${n0.toLocaleDateString('en-US',{weekday:'long'})}, 9:30 AM`;
+</script>
+</body>
+</html>

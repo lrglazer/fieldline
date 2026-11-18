@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta name="robots" content="noindex">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CADENCE — Calibre C.01 (Design Concept)</title>
+<meta name="description" content="CADENCE Calibre C.01: a design concept for a mechanical watch. Designed and built by Leya Glazer.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,900;1,9..144,300;1,9..144,500&family=Hanken+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#f1ece2;--paper2:#e8e1d3;--ink:#16130f;--muted:#6f675c;--gold:#a8803e;--gold2:#d9b56f;--night:#100f0d;--line:rgba(22,19,15,.12);
+  --f:'Fraunces',Georgia,serif;--b:'Hanken Grotesk',system-ui,sans-serif;--m:'IBM Plex Mono',ui-monospace,monospace}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;overflow-x:clip}
+body{background:var(--paper);color:var(--ink);font-family:var(--b);-webkit-font-smoothing:antialiased;overflow-x:clip}
+em{font-style:italic;font-weight:300}
+.mono{font-family:var(--m)}
+.kick{font-family:var(--m);font-size:.72rem;letter-spacing:.24em;text-transform:uppercase;color:var(--gold)}
+.wrap{max-width:1200px;margin:0 auto;padding:0 26px}
+button{font:inherit}
+
+/* intro curtain */
+#curtain{position:fixed;inset:0;z-index:100;display:grid;grid-template-rows:1fr 1fr;pointer-events:none}
+#curtain i{background:var(--night);transition:transform 1.1s cubic-bezier(.8,0,.15,1)}
+#curtain i:nth-of-type(2){transition-delay:.05s}
+#curtain .cTxt{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--f);font-size:clamp(2rem,6vw,4rem);color:var(--gold2);letter-spacing:.3em;font-weight:300;transition:opacity .5s}
+body.open #curtain i:first-child{transform:translateY(-100%)}
+body.open #curtain i:nth-of-type(2){transform:translateY(100%)}
+body.open #curtain .cTxt{opacity:0}
+
+/* nav */
+nav{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;justify-content:space-between;align-items:center;padding:18px 28px;transition:background .4s,color .4s}
+nav.dark{color:#efe7d6}
+.logo{font-family:var(--f);font-weight:600;letter-spacing:.38em;font-size:1rem}
+.nl{display:flex;gap:26px;font-family:var(--m);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase}
+.nl a{color:inherit;text-decoration:none;opacity:.75}.nl a:hover{opacity:1}
+@media(max-width:700px){.nl a:not(:last-child){display:none}}
+
+/* hero */
+#hero{position:relative;min-height:100svh;display:grid;grid-template-columns:1.05fr 1fr;align-items:center;gap:20px;padding:90px 5vw 40px;overflow:hidden}
+@media(max-width:880px){#hero{grid-template-columns:1fr;padding-top:100px;text-align:left}}
+.bgNum{position:absolute;right:-4vw;top:50%;transform:translateY(-50%);font-family:var(--f);font-weight:900;font-size:42vw;line-height:.8;color:transparent;-webkit-text-stroke:1px rgba(168,128,62,.18);pointer-events:none;letter-spacing:-.05em;user-select:none}
+h1{font-family:var(--f);font-weight:900;font-size:clamp(3.6rem,9vw,8.2rem);line-height:.9;letter-spacing:-.035em;margin:18px 0 22px}
+h1 em{color:var(--gold);font-weight:300}
+.ln{display:block;overflow:hidden;padding-bottom:.08em}
+.ln>span{display:inline-block;transform:translateY(105%);transition:transform 1.2s cubic-bezier(.2,.8,.2,1)}
+body.open .ln>span{transform:none}
+body.open .ln:nth-child(2)>span{transition-delay:.12s}
+.heroP{max-width:440px;color:#4a443b;font-size:1.08rem;line-height:1.6;opacity:0;transform:translateY(16px);transition:1s .5s}
+.heroBtns{display:flex;gap:12px;margin-top:28px;flex-wrap:wrap;opacity:0;transform:translateY(16px);transition:1s .65s}
+body.open .heroP,body.open .heroBtns{opacity:1;transform:none}
+.btn{display:inline-flex;align-items:center;gap:10px;padding:15px 24px;border-radius:999px;border:1px solid var(--ink);background:var(--ink);color:var(--paper);text-decoration:none;font-weight:500;cursor:pointer;transition:.3s}
+.btn:hover{background:var(--gold);border-color:var(--gold)}
+.btn.ghost{background:transparent;color:var(--ink)}
+.btn.ghost:hover{background:var(--ink);color:var(--paper)}
+.watchWrap{position:relative;height:min(86vh,820px);display:flex;justify-content:center;align-items:center;opacity:0;transform:scale(.9) rotate(-8deg);transition:opacity 1.4s .2s,transform 1.6s .2s cubic-bezier(.2,.8,.2,1)}
+body.open .watchWrap{opacity:1;transform:none}
+@media(max-width:880px){.watchWrap{height:70vh}}
+.watchWrap svg{height:100%;width:auto;max-width:100%;overflow:hidden;-webkit-mask-image:linear-gradient(transparent,#000 14%,#000 86%,transparent);mask-image:linear-gradient(transparent,#000 14%,#000 86%,transparent);filter:drop-shadow(0 40px 50px rgba(40,25,5,.28))}
+.windHint{position:absolute;right:0;bottom:6%;font-family:var(--m);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);text-align:right;line-height:1.7}
+.windHint b{color:var(--ink)}
+.pr{display:inline-block;width:110px;height:4px;background:var(--line);border-radius:4px;vertical-align:middle;margin-left:8px;overflow:hidden}
+.pr i{display:block;height:100%;background:var(--gold);transition:width .2s}
+.pr.low i{background:#c0392b}
+#hCrown{cursor:ns-resize}
+@media(max-width:880px){.windHint{position:static;text-align:center;margin-top:-10px}}
+
+#hero::before{content:"";position:absolute;inset:0;background:radial-gradient(600px circle at var(--mx,70%) var(--my,45%),rgba(255,214,140,.55),transparent 60%);pointer-events:none;transition:background .1s}
+#bgGears{position:absolute;right:-6vw;top:50%;width:min(95vh,950px);height:min(95vh,950px);transform:translateY(-50%);pointer-events:none;opacity:.9}
+#dust{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1}
+.watchWrap{transform-style:preserve-3d}
+.tiltIn{transition:transform .25s ease-out;transform-style:preserve-3d;height:100%;display:flex;align-items:center;justify-content:center}
+.band{background:var(--night);overflow:hidden;padding:40px 0 10px;position:relative}
+.band div{font-family:var(--f);font-weight:900;font-size:clamp(5rem,16vw,15rem);line-height:.9;letter-spacing:-.04em;white-space:nowrap;color:transparent;-webkit-text-stroke:1.5px rgba(217,181,111,.55);will-change:transform}
+.band div em{font-weight:300;-webkit-text-stroke:0;color:var(--gold2)}
+.band div .beat{transition:color .08s,-webkit-text-stroke .08s}
+.band div .beat.on{color:var(--gold2)}
+/* ticker */
+.ticker{background:var(--night);color:var(--gold2);overflow:hidden;padding:16px 0;font-family:var(--m);font-size:.8rem;letter-spacing:.24em;white-space:nowrap}
+.ticker div{display:inline-block;animation:tk 40s linear infinite}
+@keyframes tk{to{transform:translateX(-50%)}}
+
+/* movement sticky */
+#movement{height:420vh;background:var(--night);color:#efe7d6;position:relative}
+.stick{position:sticky;top:0;height:100vh;display:grid;grid-template-columns:.9fr 1.1fr;align-items:center;overflow:hidden}
+@media(max-width:880px){.stick{grid-template-columns:1fr;grid-template-rows:auto 1fr;padding-top:70px}}
+.steps{position:relative;height:260px;padding:0 5vw}
+@media(max-width:880px){.steps{height:200px;order:2}}
+.st{position:absolute;left:5vw;right:5vw;opacity:0;transform:translateY(24px);transition:.7s}
+.st.on{opacity:1;transform:none}
+.st .kick{color:var(--gold2)}
+.st h2{font-family:var(--f);font-weight:600;font-size:clamp(2rem,4.4vw,3.6rem);line-height:1;letter-spacing:-.02em;margin:12px 0 14px}
+.st h2 em{color:var(--gold2)}
+.st p{color:#b9b0a1;line-height:1.6;max-width:420px}
+@media(max-width:880px){.st p{font-size:.92rem}}
+.stage{position:relative;justify-self:center;width:var(--S);height:var(--S);perspective:1600px}
+.stack{position:absolute;inset:0;transform-style:preserve-3d}
+.lyr{position:absolute;inset:0;width:100%;height:100%}
+.lyr canvas,.lyr svg{width:100%;height:100%;display:block}
+.tag{position:absolute;font-family:var(--m);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold2);white-space:nowrap;opacity:0;transition:opacity .5s;pointer-events:none}
+.tag::after{content:"";display:inline-block;width:26px;height:1px;background:var(--gold2);vertical-align:middle;margin-left:8px}
+@media(max-width:880px){.tag{display:none}}
+.tag.on{opacity:1}
+.dots{position:absolute;right:24px;top:50%;transform:translateY(-50%);display:grid;gap:10px}
+.dots i{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.2);transition:.3s}
+.dots i.on{background:var(--gold2);height:22px;border-radius:4px}
+
+/* loupe section */
+#closer{background:var(--night);color:#efe7d6;padding:40px 0 130px}
+.cGrid{display:grid;grid-template-columns:1fr 340px;gap:40px;align-items:center}
+@media(max-width:920px){.cGrid{grid-template-columns:1fr}}
+.cHead h2,.secH{font-family:var(--f);font-weight:600;font-size:clamp(2.6rem,6vw,5rem);line-height:.95;letter-spacing:-.03em}
+.cHead h2 em{color:var(--gold2)}
+.cHead p{color:#b9b0a1;line-height:1.6;margin:16px 0 30px;max-width:520px}
+.flatWrap{position:relative;width:min(100%,640px);aspect-ratio:1;margin:0 auto;cursor:none;touch-action:pan-y}
+#flat{width:100%;height:100%;display:block}
+#loupe{position:absolute;width:210px;height:210px;border-radius:50%;pointer-events:none;transform:translate(-50%,-50%) scale(.6);opacity:0;transition:opacity .25s,transform .25s;box-shadow:0 0 0 6px #2a2622,0 0 0 8px var(--gold),0 30px 60px rgba(0,0,0,.6),inset 0 0 40px rgba(0,0,0,.6);overflow:hidden;background:#000}
+#loupe.on{opacity:1;transform:translate(-50%,-50%) scale(1)}
+#loupe canvas{width:100%;height:100%}
+#loupe::after{content:"";position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 30% 25%,rgba(255,255,255,.22),transparent 40%)}
+#loupe span{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);font-family:var(--m);font-size:.6rem;letter-spacing:.2em;color:var(--gold2);z-index:2}
+.panelD{border:1px solid rgba(255,255,255,.1);border-radius:24px;padding:26px;background:rgba(255,255,255,.03);display:grid;gap:22px}
+.lbl{font-family:var(--m);font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:#8d8475;margin-bottom:10px;display:flex;justify-content:space-between}
+.lbl b{color:#efe7d6;font-weight:500;letter-spacing:.06em}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{font-family:var(--m);font-size:.72rem;padding:9px 13px;border-radius:999px;border:1px solid rgba(255,255,255,.14);background:none;color:#efe7d6;cursor:pointer;transition:.2s}
+.chip.on,.chip:hover{background:var(--gold2);color:var(--night);border-color:var(--gold2)}
+.big{font-family:var(--f);font-size:2.6rem;font-weight:300;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.res{height:8px;border-radius:8px;background:rgba(255,255,255,.08);overflow:hidden}
+.res i{display:block;height:100%;background:linear-gradient(90deg,#8a6a2e,var(--gold2));transition:width .2s}
+.wbtn{width:100%;padding:14px;border-radius:14px;border:1px solid var(--gold2);background:transparent;color:var(--gold2);cursor:pointer;font-weight:700;letter-spacing:.04em;transition:.2s}
+.wbtn:hover,.wbtn.pulse{background:var(--gold2);color:var(--night)}
+.wbtn.pulse{animation:pl 1s infinite}
+@keyframes pl{50%{box-shadow:0 0 0 10px rgba(217,181,111,.2)}}
+.stopped{color:#ff8a7a;font-family:var(--m);font-size:.7rem;letter-spacing:.14em;min-height:1em}
+
+/* numbers */
+#numbers{padding:120px 0 80px}
+.nums{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--line)}
+@media(max-width:820px){.nums{grid-template-columns:repeat(2,1fr)}}
+.n{padding:34px 20px 30px 0;border-bottom:1px solid var(--line)}
+.n b{display:block;font-family:var(--f);font-weight:300;font-size:clamp(2.8rem,6vw,5rem);letter-spacing:-.04em;line-height:1;font-variant-numeric:tabular-nums}
+.n small{font-family:var(--m);font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+
+/* configurator */
+#config{padding:60px 0 120px}
+.cfg{display:grid;grid-template-columns:1fr 1fr;gap:50px;align-items:center}
+@media(max-width:880px){.cfg{grid-template-columns:1fr}}
+.cfgWatch{height:min(78vh,720px);display:flex;justify-content:center;align-items:center;background:radial-gradient(circle at 50% 45%,#fff8ea,transparent 65%)}
+.cfgWatch svg{height:100%;width:auto;max-width:100%;overflow:hidden;-webkit-mask-image:linear-gradient(transparent,#000 14%,#000 86%,transparent);mask-image:linear-gradient(transparent,#000 14%,#000 86%,transparent);filter:drop-shadow(0 30px 40px rgba(40,25,5,.25));transition:transform .6s cubic-bezier(.2,.8,.2,1)}
+.cfgWatch svg.pop{transform:scale(1.03) rotate(2deg)}
+.secH em{color:var(--gold)}
+.cfgP{color:#4a443b;line-height:1.6;margin:16px 0 30px;max-width:440px}
+.row{margin-bottom:24px}
+.row .lbl{color:var(--muted)}.row .lbl b{color:var(--ink)}
+.sws{display:flex;gap:12px;flex-wrap:wrap}
+.sw{width:46px;height:46px;border-radius:50%;cursor:pointer;border:0;outline:1.5px solid transparent;outline-offset:4px;transition:.25s;box-shadow:inset 0 -6px 12px rgba(0,0,0,.25),inset 0 5px 8px rgba(255,255,255,.4),0 4px 10px rgba(0,0,0,.12)}
+.sw:hover{transform:translateY(-3px)}
+.sw.on{outline-color:var(--ink)}
+.ref{font-family:var(--m);font-size:.75rem;color:var(--muted);letter-spacing:.1em;border-top:1px solid var(--line);padding-top:18px}
+
+/* about */
+#about{padding:0 0 110px}
+.about{border:1px solid var(--line);border-radius:28px;padding:46px;background:#fffaf0;position:relative;overflow:hidden}
+.about::after{content:"C.01";position:absolute;right:-10px;bottom:-60px;font-family:var(--f);font-weight:900;font-size:14rem;color:transparent;-webkit-text-stroke:1px rgba(168,128,62,.2);pointer-events:none}
+.about h3{font-family:var(--f);font-weight:600;font-size:clamp(1.8rem,4vw,3rem);letter-spacing:-.02em;line-height:1.05;margin:12px 0 16px;max-width:760px}
+.about h3 em{color:var(--gold)}
+.about p{color:#4a443b;line-height:1.65;max-width:700px;margin-bottom:12px;position:relative;z-index:1}
+.tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px;position:relative;z-index:1}
+.tags span{font-family:var(--m);font-size:.7rem;padding:7px 12px;border-radius:999px;border:1px solid var(--line);color:var(--muted)}
+footer{background:var(--night);color:#8d8475;padding:36px 28px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;font-family:var(--m);font-size:.7rem;letter-spacing:.06em}
+#badge{position:fixed;left:16px;bottom:16px;z-index:60;font-family:var(--m);font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;padding:10px 14px;border-radius:999px;background:rgba(241,236,226,.92);backdrop-filter:blur(8px);border:1px solid var(--gold);color:var(--ink);cursor:pointer;display:flex;gap:8px;align-items:center}
+#badge i{width:7px;height:7px;border-radius:50%;background:var(--gold);animation:bl 1.6s infinite}
+@keyframes bl{50%{opacity:.25}}
+.rv{opacity:0;transform:translateY(36px);transition:opacity 1s cubic-bezier(.2,.8,.2,1),transform 1s cubic-bezier(.2,.8,.2,1)}
+.rv.in{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}.rv{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<div id="curtain"><i></i><i></i><div class="cTxt">CADENCE</div></div>
+<button id="badge" onclick="document.getElementById('about').scrollIntoView({behavior:'smooth'})"><i></i>Design concept · not a real watch</button>
+
+<nav id="nav"><span class="logo">CADENCE</span><div class="nl"><a href="#movement">Movement</a><a href="#closer">Look closer</a><a href="#config">Configure</a><a href="#about">About</a></div></nav>
+
+<section id="hero">
+  <div class="bgNum">C.01</div><svg id="bgGears" viewBox="0 0 1000 1000"></svg><canvas id="dust"></canvas>
+  <div style="position:relative;z-index:2">
+    <div class="kick">Concept watch · Calibre C.01</div>
+    <h1><span class="ln"><span>Time,</span></span><span class="ln"><span><em>engineered.</em></span></span></h1>
+    <p class="heroP">A hand-wound mechanical movement with 214 parts and no battery, beating eight times every second. The watch is showing your real time right now.</p>
+    <div class="heroBtns"><a class="btn" href="#movement">See inside ↓</a><a class="btn ghost" href="#config">Make it yours</a></div>
+  </div>
+  <div style="position:relative">
+    <div class="watchWrap"><div class="tiltIn" id="heroWatch"></div></div>
+    <div class="windHint">Drag the crown ↕ to wind<br>Power reserve <b id="hPR">42</b> h<span class="pr" id="hPRbar"><i></i></span></div>
+  </div>
+</section>
+
+<div class="ticker"><div id="tk"></div></div>
+<div class="band"><div id="band1">EIGHT <em>beats</em> A SECOND · <span class="beat">TICK</span> <span class="beat">TOCK</span> · EIGHT <em>beats</em> A SECOND ·</div><div id="band2" style="-webkit-text-stroke-color:rgba(255,255,255,.18)">28,800 PER HOUR · <em>no battery</em> · 214 PARTS · 28,800 PER HOUR ·</div></div>
+
+<section id="movement">
+  <div class="stick">
+    <div class="steps">
+      <div class="st" data-i="0"><div class="kick">01 · The dial</div><h2>Lift the <em>dial.</em></h2><p>Keep scrolling. Under the dial, 214 parts work together to count every second without a battery.</p></div>
+      <div class="st" data-i="1"><div class="kick">02 · The movement</div><h2>A machine in <em>miniature.</em></h2><p>The mainspring barrel stores energy. The gear train steps it down so the minute wheel turns exactly once an hour.</p></div>
+      <div class="st" data-i="2"><div class="kick">03 · Exploded view</div><h2>Four <em>layers.</em></h2><p>The main plate, the gear train, the escapement and the bridges. Each one is finished by hand, including surfaces nobody will ever see.</p></div>
+      <div class="st" data-i="3"><div class="kick">04 · The heartbeat</div><h2>Eight beats a <em>second.</em></h2><p>The balance wheel swings back and forth 4 times a second. On each swing, the escapement lets the gear train advance one tiny step: 28,800 steps an hour.</p></div>
+    </div>
+    <div class="stage" id="stage">
+      <div class="stack" id="stack">
+        <div class="lyr" data-l="0"><canvas id="L0"></canvas></div>
+        <div class="lyr" data-l="1"><canvas id="L1"></canvas></div>
+        <div class="lyr" data-l="2"><canvas id="L2"></canvas></div>
+        <div class="lyr" data-l="3"><canvas id="L3"></canvas></div>
+        <div class="lyr" data-l="4" id="dialLyr"></div>
+      </div>
+      <div class="tag" style="right:96%;top:10%" data-t="3">Bridges · Côtes de Genève</div>
+      <div class="tag" style="right:96%;top:28%" data-t="2">Escapement · 4 Hz</div>
+      <div class="tag" style="right:96%;top:52%" data-t="1">Gear train · 1 rev / hour</div>
+      <div class="tag" style="right:96%;top:74%" data-t="0">Main plate · perlage</div>
+    </div>
+    <div class="dots"><i></i><i></i><i></i><i></i></div>
+  </div>
+</section>
+
+<section id="closer"><div class="wrap">
+  <div class="cHead rv"><div class="kick" style="color:var(--gold2)">Look closer</div><h2>Every part, <em>moving.</em></h2><p>Move your cursor over the movement to use the watchmaker's loupe. Speed up time to see the minute wheel turn, or let the mainspring run down and watch the watch stop.</p></div>
+  <div class="cGrid">
+    <div class="flatWrap rv" id="flatWrap"><canvas id="flat"></canvas><div id="loupe"><canvas id="lc"></canvas><span>LOUPE ×3</span></div></div>
+    <div class="panelD rv">
+      <div><div class="lbl">Watch time</div><div class="big" id="vt">00:00:00</div></div>
+      <div><div class="lbl">Time speed <b id="spdL">Real time</b></div><div class="chips" id="warp"><button class="chip on" data-w="1">Real</button><button class="chip" data-w="60">60×</button><button class="chip" data-w="600">600×</button><button class="chip" data-w="3600">3600×</button></div></div>
+      <div><div class="lbl">Power reserve <b id="cPR">42 h</b></div><div class="res"><i id="cPRbar"></i></div></div>
+      <button class="wbtn" id="wind">Wind the mainspring (+12 h)</button>
+      <div><div class="lbl">Ticking sound</div><div class="chips"><button class="chip" id="snd">Sound off</button></div></div>
+      <div class="stopped" id="stopMsg"></div>
+    </div>
+  </div>
+</div></section>
+
+<section id="numbers"><div class="wrap">
+  <div class="nums rv">
+    <div class="n"><b data-n="28800" data-c="1">0</b><small>Beats per hour</small></div>
+    <div class="n"><b data-n="72">0</b><small>Hours of power</small></div>
+    <div class="n"><b data-n="214">0</b><small>Components</small></div>
+    <div class="n"><b data-n="31">0</b><small>Jewels</small></div>
+  </div>
+</div></section>
+
+<section id="config"><div class="wrap cfg">
+  <div class="rv">
+    <div class="kick">Configure</div>
+    <h2 class="secH">Make it <em>yours.</em></h2>
+    <p class="cfgP">Choose a dial, a case and a strap. The watch updates live and keeps ticking while you decide.</p>
+    <div class="row"><div class="lbl">Dial <b id="nDial"></b></div><div class="sws" id="sDial"></div></div>
+    <div class="row"><div class="lbl">Case <b id="nCase"></b></div><div class="sws" id="sCase"></div></div>
+    <div class="row"><div class="lbl">Strap <b id="nStrap"></b></div><div class="sws" id="sStrap"></div></div>
+    <div class="ref" id="refNo"></div>
+  </div>
+  <div class="cfgWatch rv" id="cfgWatch"></div>
+</div></section>
+
+<section id="about"><div class="wrap">
+  <div class="about rv">
+    <div class="kick">About this project</div>
+    <h3>This is a <em>design example.</em> CADENCE isn't a real watch or brand.</h3>
+    <p>I designed and built this concept site to show product storytelling, motion design and interactive graphics, with real mechanical engineering underneath. There's no watch for sale and no company behind it.</p>
+    <p>The movement is drawn and animated in code. Its gear ratios are real: the center wheel turns once an hour, the fourth wheel once a minute, and the escapement beats 8 times a second (28,800 per hour). The physical specs are realistic but made up.</p>
+    <div class="tags"><span>Canvas animation</span><span>CSS 3D</span><span>SVG</span><span>Gear train math</span><span>Responsive design</span><span>Mechanical engineering</span></div>
+  </div>
+</div></section>
+
+<footer><span>CADENCE is a design example only. It's not a real product or company.</span><span>Designed &amp; built by Leya Glazer · 2026</span></footer>
+
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const TAU=Math.PI*2;
+
+/* ---------- options ---------- */
+const DIALS=[['Ivory','#efe7d4'],['Midnight','#18213b'],['Forest','#1d3a2c'],['Salmon','#e7a88e'],['Meteor','#3a3a3d']];
+const CASES=[['Steel',['#f6f7f9','#a7aeb6','#e7eaee','#737b84']],['Rose gold',['#f8dccd','#c48a70','#f0c7b2','#93593f']],['Yellow gold',['#f8e8b6','#c49c48','#f2d58c','#8a6a26']],['Black DLC',['#5b5b60','#1c1c1e','#3d3d42','#0b0b0c']]];
+const STRAPS=[['Cognac','#8a4d22'],['Black','#1d1b1a'],['Navy','#1f2a44'],['Olive','#4d5332'],['Sand','#c8b393']];
+const cfg={dial:0,case:0,strap:0};
+const light=hex=>{const n=parseInt(hex.slice(1),16);return ((n>>16)*.299+((n>>8)&255)*.587+(n&255)*.114)>150};
+
+/* ---------- watch SVG ---------- */
+function watchSVG(id,o,mode){ // mode: 'full' | 'dial'
+  const D=DIALS[o.dial][1],C=CASES[o.case][1],St=STRAPS[o.strap][1],ink=light(D)?'#1a1712':'#efe6d2',metal=C[0],dark=!light(D);
+  let s='';
+  s+=`<defs>
+  <linearGradient id="${id}m" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${C[0]}"/><stop offset=".35" stop-color="${C[1]}"/><stop offset=".6" stop-color="${C[2]}"/><stop offset="1" stop-color="${C[3]}"/></linearGradient>
+  <linearGradient id="${id}h" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="${C[0]}"/><stop offset=".5" stop-color="${C[2]}"/><stop offset=".5" stop-color="${C[1]}"/><stop offset="1" stop-color="${C[3]}"/></linearGradient>
+  <radialGradient id="${id}d" cx=".42" cy=".36" r=".75"><stop offset="0" stop-color="#fff" stop-opacity="${dark?.16:.45}"/><stop offset=".55" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity="${dark?.45:.18}"/></radialGradient>
+  <linearGradient id="${id}s" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#000" stop-opacity=".35"/><stop offset=".15" stop-color="#fff" stop-opacity=".08"/><stop offset=".85" stop-color="#fff" stop-opacity=".04"/><stop offset="1" stop-color="#000" stop-opacity=".35"/></linearGradient>
+  <clipPath id="${id}c"><circle cx="500" cy="500" r="405"/></clipPath>
+  </defs>`;
+  if(mode==='full'){
+    // strap
+    s+=`<rect x="300" y="-560" width="400" height="720" rx="40" fill="${St}"/><rect x="300" y="-560" width="400" height="720" rx="40" fill="url(#${id}s)"/>
+        <rect x="300" y="840" width="400" height="720" rx="40" fill="${St}"/><rect x="300" y="840" width="400" height="720" rx="40" fill="url(#${id}s)"/>
+        <path d="M322 -540 V150 M678 -540 V150 M322 850 V1540 M678 850 V1540" stroke="${light(St)?'#7a6a50':'#d9c49a'}" stroke-opacity=".55" stroke-width="4" stroke-dasharray="14 10"/>
+        <rect x="455" y="1180" width="90" height="16" rx="8" fill="#000" opacity=".35"/><rect x="455" y="1290" width="90" height="16" rx="8" fill="#000" opacity=".35"/>`;
+    // lugs
+    s+=`<path d="M285 130 Q300 30 330 20 L370 20 L370 150 Z M715 130 Q700 30 670 20 L630 20 L630 150 Z M285 870 Q300 970 330 980 L370 980 L370 850 Z M715 870 Q700 970 670 980 L630 980 L630 850 Z" fill="url(#${id}m)"/>`;
+    // crown
+    s+=`<rect x="955" y="478" width="30" height="44" fill="url(#${id}h)"/><g id="${id}crown" style="cursor:ns-resize"><rect x="978" y="440" width="54" height="120" rx="14" fill="url(#${id}m)"/><g id="${id}knurl" stroke="#000" stroke-opacity=".28" stroke-width="3">${Array.from({length:14},(_,i)=>`<line x1="980" x2="1030" y1="${446+i*9}" y2="${446+i*9}"/>`).join('')}</g><rect x="978" y="440" width="54" height="120" rx="14" fill="none" stroke="#000" stroke-opacity=".2" stroke-width="2"/></g>`;
+    // case
+    s+=`<circle cx="500" cy="500" r="472" fill="url(#${id}m)"/><circle cx="500" cy="500" r="472" fill="none" stroke="#000" stroke-opacity=".25" stroke-width="3"/>
+        <circle cx="500" cy="500" r="438" fill="url(#${id}h)" transform="rotate(35 500 500)"/><circle cx="500" cy="500" r="414" fill="#000" opacity=".35"/>`;
+  }
+  // dial
+  s+=`<g clip-path="url(#${id}c)"><circle cx="500" cy="500" r="410" fill="${D}"/>
+      <g stroke="${dark?'#fff':'#000'}" stroke-opacity="${dark?.05:.045}" stroke-width="2.2">${Array.from({length:120},(_,i)=>{const a=i*3*Math.PI/180;return `<line x1="500" y1="500" x2="${500+410*Math.cos(a)}" y2="${500+410*Math.sin(a)}"/>`}).join('')}</g>
+      <g fill="none" stroke="${dark?'#fff':'#000'}" stroke-opacity=".05">${Array.from({length:10},(_,i)=>`<circle cx="500" cy="500" r="${60+i*14}"/>`).join('')}</g>`;
+  // minute track
+  for(let i=0;i<60;i++){const a=i*6*Math.PI/180,r1=i%5?378:368,r2=392;s+=`<line x1="${500+r1*Math.sin(a)}" y1="${500-r1*Math.cos(a)}" x2="${500+r2*Math.sin(a)}" y2="${500-r2*Math.cos(a)}" stroke="${ink}" stroke-width="${i%5?2:4}" stroke-opacity=".75"/>`}
+  // indices
+  for(let i=0;i<12;i++){const a=i*30;if(i===6)continue;const w=i===0?0:1;
+    const g=(dx)=>`<rect x="${489+dx}" y="140" width="22" height="${i%3?62:76}" rx="4" fill="url(#${id}h)" stroke="#000" stroke-opacity=".25" transform="rotate(${a} 500 500)"/>`;
+    s+= i===0? g(-16)+g(16) : g(0);}
+  // power reserve arc
+  s+=`<g><path d="M${500-62*Math.sin(1.05)} ${300+62*Math.cos(1.05)}" fill="none"/>`;
+  for(let k=0;k<=12;k++){const a=-120+k*20,r1=k%3?52:46,r2=62,ar=a*Math.PI/180;s+=`<line x1="${500+r1*Math.sin(ar)}" y1="${300-r1*Math.cos(ar)}" x2="${500+r2*Math.sin(ar)}" y2="${300-r2*Math.cos(ar)}" stroke="${ink}" stroke-width="${k%3?1.5:3}" stroke-opacity=".7"/>`}
+  s+=`<text x="500" y="330" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="15" letter-spacing="3" fill="${ink}" opacity=".7">RÉSERVE</text>
+      <g id="${id}pr"><line x1="500" y1="300" x2="500" y2="248" stroke="#b5452f" stroke-width="3.5" stroke-linecap="round"/></g><circle cx="500" cy="300" r="6" fill="url(#${id}h)"/></g>`;
+  // brand
+  s+=`<text x="500" y="430" text-anchor="middle" font-family="Fraunces,Georgia,serif" font-weight="600" font-size="42" letter-spacing="13" fill="${ink}">CADENCE</text>
+      <text x="500" y="590" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="15" letter-spacing="5" fill="${ink}" opacity=".7">CALIBRE C.01 · 72H</text>`;
+  // sub seconds
+  s+=`<circle cx="500" cy="700" r="80" fill="#000" opacity="${dark?.18:.06}"/><circle cx="500" cy="700" r="80" fill="none" stroke="${ink}" stroke-opacity=".35" stroke-width="2"/>`;
+  for(let k=0;k<60;k+=2){const a=k*6*Math.PI/180,r1=k%10?70:62;s+=`<line x1="${500+r1*Math.sin(a)}" y1="${700-r1*Math.cos(a)}" x2="${500+78*Math.sin(a)}" y2="${700-78*Math.cos(a)}" stroke="${ink}" stroke-width="${k%10?1.4:2.6}" stroke-opacity=".7"/>`}
+  s+=`<g id="${id}sec"><line x1="500" y1="715" x2="500" y2="628" stroke="#b5452f" stroke-width="3" stroke-linecap="round"/></g><circle cx="500" cy="700" r="7" fill="#b5452f"/>`;
+  // hands
+  s+=`<g id="${id}hr"><path d="M488 520 L492 300 Q500 270 508 300 L512 520 Z" fill="url(#${id}h)" stroke="#000" stroke-opacity=".35"/><path d="M496 470 L497 320 L503 320 L504 470Z" fill="${dark?'#fff8e6':'#1a1712'}" opacity=".55"/></g>
+      <g id="${id}mn"><path d="M490 525 L494 175 Q500 145 506 175 L510 525 Z" fill="url(#${id}h)" stroke="#000" stroke-opacity=".35"/><path d="M497 470 L498 200 L502 200 L503 470Z" fill="${dark?'#fff8e6':'#1a1712'}" opacity=".55"/></g>
+      <circle cx="500" cy="500" r="16" fill="url(#${id}m)" stroke="#000" stroke-opacity=".3"/>
+      <circle cx="500" cy="500" r="410" fill="url(#${id}d)"/></g>`;
+  // glass glare
+  s+=`<path d="M200 260 Q380 90 640 120 Q420 160 260 330 Z" fill="#fff" opacity=".12" clip-path="url(#${id}c)"/>`;
+  const vb=mode==='full'?'-40 -230 1100 1460':'90 90 820 820';
+  return `<svg id="${id}" viewBox="${vb}" xmlns="http://www.w3.org/2000/svg">${s}</svg>`;
+}
+function mountWatches(){
+  $('#heroWatch').innerHTML=watchSVG('hw',cfg,'full');
+  $('#cfgWatch').innerHTML=watchSVG('cw',cfg,'full');
+  $('#dialLyr').innerHTML=watchSVG('dw',cfg,'dial');
+  bindCrown();
+}
+
+/* ---------- time + power ---------- */
+const now=new Date();let T=now.getHours()*3600+now.getMinutes()*60+now.getSeconds()+now.getMilliseconds()/1000;
+let warp=1,reserve=42,amp=1,running=true,introK=reduce?1:0,introStart=null;
+const ease=x=>1-Math.pow(1-x,3);
+function quant(T){const n=Math.floor(T*8),f=T*8-n;return n/8+ease(Math.min(1,f/.35))/8}
+function setHands(id,Tq){
+  const h=$(`#${id}hr`);if(!h)return;
+  const sec=Tq%60,min=(Tq/60)%60,hr=(Tq/3600)%12;
+  let aH=hr*30,aM=min*6;
+  if(introK<1){const k=ease(introK);aH=10*30+ (aH+360-300)*k;aM=10*6+(aM+720-60)*k}
+  h.setAttribute('transform',`rotate(${aH} 500 500)`);
+  $(`#${id}mn`).setAttribute('transform',`rotate(${aM} 500 500)`);
+  $(`#${id}sec`).setAttribute('transform',`rotate(${sec*6} 500 700)`);
+  $(`#${id}pr`).setAttribute('transform',`rotate(${-120+240*reserve/72} 500 300)`);
+}
+
+/* crown winding */
+function bindCrown(){
+  const cr=$('#hwcrown');if(!cr)return;let drag=false,ly=0,off=0;
+  cr.addEventListener('pointerdown',e=>{drag=true;ly=e.clientY;cr.setPointerCapture(e.pointerId);e.preventDefault()});
+  cr.addEventListener('pointermove',e=>{if(!drag)return;const dy=e.clientY-ly;ly=e.clientY;reserve=Math.min(72,reserve+Math.abs(dy)*.12);off=(off+dy*.6)%9;$('#hwknurl').setAttribute('transform',`translate(0 ${off})`);tickSound(true)});
+  cr.addEventListener('pointerup',()=>drag=false);
+}
+
+/* ---------- sound ---------- */
+let AC=null,soundOn=false,lastBeat=-1;
+function tickSound(force){if(!soundOn&&!force)return;if(!soundOn)return;if(!AC)AC=new (window.AudioContext||window.webkitAudioContext)();
+  const o=AC.createOscillator(),g=AC.createGain(),f=AC.createBiquadFilter();o.type='square';o.frequency.value=force?900:2600+Math.random()*300;f.type='highpass';f.frequency.value=1800;g.gain.setValueAtTime(.06,AC.currentTime);g.gain.exponentialRampToValueAtTime(.0001,AC.currentTime+.025);o.connect(f);f.connect(g);g.connect(AC.destination);o.start();o.stop(AC.currentTime+.03)}
+$('#snd').onclick=e=>{soundOn=!soundOn;e.target.classList.toggle('on',soundOn);e.target.textContent=soundOn?'Sound on':'Sound off';if(soundOn&&!AC)AC=new (window.AudioContext||window.webkitAudioContext)();};
+
+/* ---------- movement drawing (1000×1000 space) ---------- */
+const P={c:{x:500,y:500},b:{x:347,y:653},t3:{x:656,y:410},t4:{x:686,y:577},e:{x:833,y:630},bal:{x:720,y:800},f:{x:790,y:720}};
+function gearPath(ctx,R,T,m){const ra=R+m,rd=R-1.25*m,s=TAU/T;ctx.moveTo(rd,0);
+  for(let i=0;i<T;i++){const a=i*s;[[rd,a],[rd,a+s*.12],[ra,a+s*.3],[ra,a+s*.52],[rd,a+s*.7],[rd,a+s]].forEach(([r,an])=>ctx.lineTo(r*Math.cos(an),r*Math.sin(an)))}ctx.closePath()}
+const GOLD=['#fbe7b0','#d6ad5e','#8d672a'],STEEL=['#ffffff','#b7bec6','#5f666e'],BLUE=['#a9c8ff','#3d6fd6','#142a66'];
+function rg(ctx,R,c){const g=ctx.createRadialGradient(-R*.35,-R*.35,R*.05,0,0,R*1.15);g.addColorStop(0,c[0]);g.addColorStop(.55,c[1]);g.addColorStop(1,c[2]);return g}
+function jewel(ctx,x,y,r=9){ctx.beginPath();ctx.arc(x,y,r+5,0,TAU);ctx.fillStyle='#e9d6a4';ctx.fill();ctx.beginPath();ctx.arc(x,y,r,0,TAU);const g=ctx.createRadialGradient(x-3,y-3,1,x,y,r);g.addColorStop(0,'#ffb3c1');g.addColorStop(.5,'#d3123f');g.addColorStop(1,'#5a0018');ctx.fillStyle=g;ctx.fill();ctx.beginPath();ctx.arc(x,y,2.5,0,TAU);ctx.fillStyle='#2a0008';ctx.fill()}
+function wheel(ctx,o){ctx.save();ctx.translate(o.x,o.y);const fill=rg(ctx,o.R,o.col||GOLD);ctx.rotate(o.a);
+  ctx.beginPath();gearPath(ctx,o.R,o.T,o.m);
+  if(o.sp){const ri=o.R-o.m*3.4,rh=o.hub||o.R*.26,n=o.sp,w=o.sw||.16;for(let k=0;k<n;k++){const a0=k/n*TAU+w,a1=(k+1)/n*TAU-w;ctx.moveTo(ri*Math.cos(a0),ri*Math.sin(a0));ctx.arc(0,0,ri,a0,a1);ctx.lineTo(rh*Math.cos(a1-w*.3),rh*Math.sin(a1-w*.3));ctx.arc(0,0,rh,a1-w*.3,a0+w*.3,true);ctx.closePath()}}
+  ctx.fillStyle=fill;ctx.fill('evenodd');ctx.lineWidth=1.3;ctx.strokeStyle='rgba(40,25,5,.55)';ctx.stroke();
+  if(o.sp){ctx.beginPath();ctx.arc(0,0,o.R-o.m*3.4,0,TAU);ctx.strokeStyle='rgba(255,240,200,.35)';ctx.lineWidth=1.5;ctx.stroke()}
+  if(o.pin){ctx.beginPath();gearPath(ctx,o.pin.R,o.pin.T,o.pin.m);ctx.fillStyle=rg(ctx,o.pin.R,STEEL);ctx.fill();ctx.strokeStyle='rgba(0,0,0,.5)';ctx.lineWidth=1;ctx.stroke()}
+  ctx.restore()}
+function escapeWheel(ctx,x,y,R,T,a){ctx.save();ctx.translate(x,y);const f=rg(ctx,R,BLUE);ctx.rotate(a);ctx.beginPath();const s=TAU/T,rd=R-14;ctx.moveTo(rd,0);
+  for(let i=0;i<T;i++){const b=i*s;[[rd,b],[R+8,b+s*.55],[R+3,b+s*.75],[rd,b+s*.62],[rd,b+s]].forEach(([r,an])=>ctx.lineTo(r*Math.cos(an),r*Math.sin(an)))}ctx.closePath();
+  const ri=R-22,rh=14;for(let k=0;k<5;k++){const a0=k/5*TAU+.25,a1=(k+1)/5*TAU-.25;ctx.moveTo(ri*Math.cos(a0),ri*Math.sin(a0));ctx.arc(0,0,ri,a0,a1);ctx.arc(0,0,rh,a1,a0,true);ctx.closePath()}
+  ctx.fillStyle=f;ctx.fill('evenodd');ctx.strokeStyle='rgba(5,15,50,.7)';ctx.lineWidth=1.2;ctx.stroke();
+  ctx.beginPath();gearPath(ctx,12,6,3);ctx.fillStyle=rg(ctx,12,STEEL);ctx.fill();ctx.restore()}
+function fork(ctx,a){ctx.save();ctx.translate(P.f.x,P.f.y);ctx.rotate(a);const toE=Math.atan2(P.e.y-P.f.y,P.e.x-P.f.x),toB=Math.atan2(P.bal.y-P.f.y,P.bal.x-P.f.x);
+  ctx.lineCap='round';ctx.strokeStyle=rg(ctx,90,BLUE);ctx.lineWidth=12;
+  const arm=(ang,len)=>[len*Math.cos(ang),len*Math.sin(ang)];
+  const p1=arm(toE-.42,62),p2=arm(toE+.42,62),lv=arm(toB,64);
+  ctx.beginPath();ctx.moveTo(p1[0],p1[1]);ctx.lineTo(0,0);ctx.lineTo(p2[0],p2[1]);ctx.moveTo(0,0);ctx.lineTo(lv[0],lv[1]);ctx.stroke();
+  [p1,p2].forEach(p=>{ctx.save();ctx.translate(p[0],p[1]);ctx.rotate(toE);ctx.fillStyle='#d3123f';ctx.fillRect(-4,-9,16,18);ctx.fillStyle='rgba(255,180,190,.6)';ctx.fillRect(-2,-7,5,14);ctx.restore()});
+  ctx.save();ctx.translate(lv[0],lv[1]);ctx.rotate(toB);ctx.strokeStyle='#cdd3da';ctx.lineWidth=5;ctx.beginPath();ctx.moveTo(-2,-11);ctx.lineTo(12,-11);ctx.moveTo(-2,11);ctx.lineTo(12,11);ctx.stroke();ctx.restore();
+  ctx.restore();jewel(ctx,P.f.x,P.f.y,6)}
+function balance(ctx,a){const {x,y}=P.bal,R=78;ctx.save();ctx.translate(x,y);
+  // hairspring (breathes with the balance)
+  ctx.beginPath();const turns=11;for(let i=0;i<=440;i++){const fr=i/440,th=fr*turns*TAU+a*(1-fr)*1.0,r=10+fr*44+Math.sin(a)*fr*2;const X=r*Math.cos(th),Y=r*Math.sin(th);i?ctx.lineTo(X,Y):ctx.moveTo(X,Y)}
+  ctx.strokeStyle='rgba(150,190,255,.85)';ctx.lineWidth=1.3;ctx.stroke();
+  ctx.rotate(a);const g=rg(ctx,R,GOLD);ctx.beginPath();ctx.arc(0,0,R,0,TAU);ctx.arc(0,0,R-11,0,TAU,true);ctx.fillStyle=g;ctx.fill('evenodd');ctx.strokeStyle='rgba(40,25,5,.6)';ctx.lineWidth=1;ctx.stroke();
+  for(let k=0;k<3;k++){ctx.save();ctx.rotate(k*TAU/3);ctx.fillStyle=g;ctx.fillRect(0,-4,R-8,8);ctx.restore()}
+  for(let k=0;k<12;k++){const an=k*TAU/12;ctx.beginPath();ctx.arc((R+4)*Math.cos(an),(R+4)*Math.sin(an),5,0,TAU);ctx.fillStyle=k%3?'#f6dc96':'#c9ced6';ctx.fill()}
+  ctx.beginPath();ctx.arc(0,0,14,0,TAU);ctx.fillStyle=rg(ctx,14,STEEL);ctx.fill();ctx.fillStyle='#d3123f';ctx.fillRect(14,-3,8,6);
+  ctx.restore()}
+let perlageCv=null,bridgeCv=null;
+function makeStatic(){
+  // main plate with perlage
+  perlageCv=document.createElement('canvas');perlageCv.width=perlageCv.height=1000;let x=perlageCv.getContext('2d');
+  x.beginPath();x.arc(500,500,478,0,TAU);const pg=x.createRadialGradient(400,380,40,500,500,520);pg.addColorStop(0,'#e7eaee');pg.addColorStop(1,'#8a9098');x.fillStyle=pg;x.fill();
+  x.save();x.clip();for(let j=0;j<46;j++)for(let i=0;i<46;i++){const cx=i*23+(j%2)*11,cy=j*23;const g=x.createRadialGradient(cx-4,cy-4,1,cx,cy,17);g.addColorStop(0,'rgba(255,255,255,.35)');g.addColorStop(.6,'rgba(255,255,255,.05)');g.addColorStop(1,'rgba(0,0,0,.12)');x.fillStyle=g;x.beginPath();x.arc(cx,cy,17,0,TAU);x.fill()}x.restore();
+  x.beginPath();x.arc(500,500,478,0,TAU);x.lineWidth=6;x.strokeStyle='#5c626a';x.stroke();
+  x.font='600 18px IBM Plex Mono, monospace';x.fillStyle='rgba(40,40,45,.55)';x.textAlign='center';x.fillText('SWISS-STYLE CONCEPT · NOT A REAL MOVEMENT',500,960);
+  // bridges with Côtes de Genève
+  bridgeCv=document.createElement('canvas');bridgeCv.width=bridgeCv.height=1000;x=bridgeCv.getContext('2d');
+  const stripe=document.createElement('canvas');stripe.width=stripe.height=60;const sx=stripe.getContext('2d');const sg=sx.createLinearGradient(0,0,60,0);sg.addColorStop(0,'#9aa2ab');sg.addColorStop(.5,'#f4f6f8');sg.addColorStop(1,'#9aa2ab');sx.fillStyle=sg;sx.fillRect(0,0,60,60);
+  const pat=x.createPattern(stripe,'repeat');pat.setTransform&&pat.setTransform(new DOMMatrix().rotate(-28));
+  const bar=(pts,w)=>{x.save();x.lineCap='round';x.lineJoin='round';x.lineWidth=w+6;x.strokeStyle='rgba(20,22,26,.65)';x.beginPath();pts.forEach((p,i)=>i?x.lineTo(p.x,p.y):x.moveTo(p.x,p.y));x.stroke();x.lineWidth=w;x.strokeStyle=pat;x.stroke();x.restore()};
+  bar([{x:150,y:760},P.b,{x:520,y:690}],58);                 // barrel bridge
+  bar([{x:520,y:270},P.t3,P.t4,{x:560,y:760}],46);            // train bridge
+  bar([{x:900,y:780},P.bal],40);                              // balance cock
+  bar([{x:900,y:540},P.e,P.f],34);                            // escapement bridge
+  const screw=(px,py)=>{x.beginPath();x.arc(px,py,13,0,TAU);const g=x.createRadialGradient(px-4,py-4,1,px,py,13);g.addColorStop(0,'#9fc2ff');g.addColorStop(1,'#1b3c8f');x.fillStyle=g;x.fill();x.strokeStyle='#0d1d48';x.lineWidth=3;x.beginPath();x.moveTo(px-9,py-4);x.lineTo(px+9,py+4);x.stroke()};
+  [[150,760],[520,690],[520,270],[560,760],[900,780],[900,540]].forEach(p=>screw(...p));
+  [P.b,P.t3,P.t4,P.e,P.bal].forEach(p=>jewel(x,p.x,p.y,8));
+  x.save();x.translate(300,700);x.rotate(-.33);x.font='600 15px IBM Plex Mono, monospace';x.fillStyle='rgba(30,30,35,.75)';x.fillText('CADENCE · C.01 · 31 JEWELS',-110,6);x.restore();
+}
+function drawPlate(ctx){ctx.drawImage(perlageCv,0,0)}
+function drawTrain(ctx,Tq,res){
+  const ac=Tq/3600*TAU;
+  // barrel with mainspring
+  wheel(ctx,{x:P.b.x,y:P.b.y,R:192,T:96,m:4,a:-ac*12/96});
+  ctx.save();ctx.translate(P.b.x,P.b.y);ctx.beginPath();ctx.arc(0,0,176,0,TAU);const bg=ctx.createRadialGradient(-50,-50,10,0,0,190);bg.addColorStop(0,'#f4dfa6');bg.addColorStop(1,'#9c7632');ctx.fillStyle=bg;ctx.fill();
+  ctx.rotate(-ac*12/96);for(let i=0;i<72;i++){ctx.rotate(TAU/72);ctx.beginPath();ctx.moveTo(40,0);ctx.lineTo(170,0);ctx.strokeStyle=i%2?'rgba(255,245,210,.25)':'rgba(90,60,15,.18)';ctx.lineWidth=3;ctx.stroke()}
+  // mainspring spiral gets tighter with more power
+  ctx.beginPath();const turns=4+res/72*10;for(let i=0;i<=500;i++){const f=i/500,th=f*turns*TAU,r=34+f*(res>1?92+20*(1-res/72):120);const X=r*Math.cos(th),Y=r*Math.sin(th);i?ctx.lineTo(X,Y):ctx.moveTo(X,Y)}ctx.strokeStyle='rgba(60,40,10,.55)';ctx.lineWidth=2.2;ctx.stroke();
+  // ratchet
+  ctx.beginPath();const RT=40,RR=60;for(let i=0;i<RT;i++){const a=i/RT*TAU;ctx.lineTo(RR*Math.cos(a),RR*Math.sin(a));ctx.lineTo((RR-8)*Math.cos(a+TAU/RT*.9),(RR-8)*Math.sin(a+TAU/RT*.9))}ctx.closePath();ctx.fillStyle=rg(ctx,60,STEEL);ctx.fill();ctx.strokeStyle='rgba(0,0,0,.4)';ctx.stroke();
+  ctx.restore();
+  wheel(ctx,{x:P.c.x,y:P.c.y,R:160,T:80,m:4,a:ac,sp:5,pin:{R:24,T:12,m:4}});
+  wheel(ctx,{x:P.t3.x,y:P.t3.y,R:150,T:75,m:4,a:-ac*8,sp:4,pin:{R:20,T:10,m:4}});
+  wheel(ctx,{x:P.t4.x,y:P.t4.y,R:144,T:72,m:4,a:ac*60,sp:4,sw:.2,pin:{R:20,T:10,m:4}});
+  jewel(ctx,P.c.x,P.c.y,10);
+}
+function drawEsc(ctx,Tq,forkA,balA){escapeWheel(ctx,P.e.x,P.e.y,62,20,-(Tq/3600*TAU)*720);fork(ctx,forkA);balance(ctx,balA);
+  if(typeof beatFlash!=='undefined'&&beatFlash>.05){const sx=P.e.x-30,sy=P.e.y+50,g=ctx.createRadialGradient(sx,sy,0,sx,sy,60*beatFlash);g.addColorStop(0,`rgba(255,230,160,${.9*beatFlash})`);g.addColorStop(1,'rgba(255,200,100,0)');ctx.save();ctx.globalCompositeOperation='lighter';ctx.fillStyle=g;ctx.beginPath();ctx.arc(sx,sy,60,0,TAU);ctx.fill();ctx.restore()}}
+function drawBridges(ctx){ctx.drawImage(bridgeCv,0,0)}
+
+/* canvases */
+const LC=[0,1,2,3].map(i=>$('#L'+i)),flat=$('#flat'),lc=$('#lc');
+function fit(cv,css,hi){const d=hi?Math.max(2,Math.min(devicePixelRatio*1.5,3)):Math.min(devicePixelRatio,2);cv.width=Math.round(css*d);cv.height=Math.round(css*d);const c=cv.getContext('2d');c.setTransform(css*d/1000,0,0,css*d/1000,0,0);return c}
+let ctxs=[],fctx,S=500;
+function sizeAll(){S=Math.round(Math.min(560,innerWidth*(innerWidth<880?.8:.42),innerHeight*(innerWidth<880?.5:.72)));$('#stage').style.setProperty('--S',S+'px');
+  ctxs=LC.map(c=>fit(c,S));fctx=fit(flat,flat.clientWidth||600,true);ctxs[0].clearRect(0,0,1000,1000);drawPlate(ctxs[0]);ctxs[3].clearRect(0,0,1000,1000);drawBridges(ctxs[3]);
+  const lw=lc.clientWidth||210,d=Math.min(devicePixelRatio,2);lc.width=lw*d;lc.height=lw*d}
+makeStatic();mountWatches();sizeAll();addEventListener('resize',sizeAll);
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>{makeStatic();sizeAll();mountWatches()});
+
+/* ---------- loupe ---------- */
+let lp=null;const fw=$('#flatWrap'),loupe=$('#loupe');
+fw.addEventListener('pointermove',e=>{const r=fw.getBoundingClientRect();lp={x:e.clientX-r.left,y:e.clientY-r.top,w:r.width};loupe.style.left=lp.x+'px';loupe.style.top=lp.y+'px';loupe.classList.add('on')});
+fw.addEventListener('pointerleave',()=>{lp=null;loupe.classList.remove('on')});
+fw.addEventListener('pointerdown',e=>{if(e.pointerType!=='mouse'){const r=fw.getBoundingClientRect();lp={x:e.clientX-r.left,y:e.clientY-r.top,w:r.width};loupe.style.left=lp.x+'px';loupe.style.top=lp.y+'px';loupe.classList.add('on');clearTimeout(fw._t);fw._t=setTimeout(()=>{loupe.classList.remove('on');lp=null},2200)}});
+
+/* ---------- controls ---------- */
+$$('#warp .chip').forEach(b=>b.onclick=()=>{warp=+b.dataset.w;$$('#warp .chip').forEach(z=>z.classList.toggle('on',z===b));$('#spdL').textContent=warp===1?'Real time':warp+'× faster'});
+$('#wind').onclick=()=>{reserve=Math.min(72,reserve+12);tickSound(true)};
+
+/* ---------- scroll choreography ---------- */
+const stack=$('#stack'),lyrs=$$('.lyr'),mv=$('#movement'),nav=$('#nav');
+function choreo(){
+  const H=innerHeight,top=mv.offsetTop,len=mv.offsetHeight-H,p=Math.max(0,Math.min(1,(scrollY-top)/len));
+  const cl=(a,b)=>Math.max(0,Math.min(1,(p-a)/(b-a)));
+  const lift=ease(cl(.02,.24)),tilt=ease(cl(.28,.5)),expl=ease(cl(.52,.76));
+  stack.style.transform=`translateY(${expl*S*.12}px) rotateX(${tilt*56}deg) rotateZ(${-tilt*32}deg) scale(${1-tilt*.12})`;
+  lyrs.forEach(l=>{const i=+l.dataset.l;
+    if(i===4){l.style.transform=`translateZ(${lift*520}px) rotateX(${-lift*25}deg) translateY(${-lift*30}%)`;l.style.opacity=1-lift;}
+    else l.style.transform=`translateZ(${i*expl*(S*.15)}px)`;
+  });
+  const step=p<.25?0:p<.5?1:p<.8?2:3;
+  $$('.st').forEach((s,i)=>s.classList.toggle('on',i===step));
+  $$('.dots i').forEach((s,i)=>s.classList.toggle('on',i===step));
+  $$('.tag').forEach(t=>t.classList.toggle('on',expl>.7));
+  const r=mv.getBoundingClientRect(),cr=$('#closer').getBoundingClientRect();
+  nav.classList.toggle('dark',(r.top<60&&r.bottom>60)||(cr.top<60&&cr.bottom>60));
+}
+addEventListener('scroll',choreo,{passive:true});
+
+/* ---------- main loop ---------- */
+let last=performance.now(),vis={mv:false,cl:false};
+new IntersectionObserver(es=>es.forEach(e=>vis[e.target.id==='movement'?'mv':'cl']=e.isIntersecting)).observe(mv);
+new IntersectionObserver(es=>es.forEach(e=>vis.cl=e.isIntersecting)).observe($('#closer'));
+function fmt(T){T=((T%86400)+86400)%86400;const h=Math.floor(T/3600),m=Math.floor(T/60)%60,s=Math.floor(T)%60;return [h,m,s].map(v=>String(v).padStart(2,'0')).join(':')}
+function loop(t){
+  const dt=Math.min(.1,(t-last)/1000);last=t;
+  if(introStart===null&&document.body.classList.contains('open'))introStart=t;
+  if(introStart!==null&&introK<1)introK=Math.min(1,(t-introStart)/2200);
+  running=reserve>0;
+  if(running){const dv=dt*warp;T+=dv;reserve=Math.max(0,reserve-dv/3600);amp+=(1-amp)*.05}else amp*=.97;
+  const Tq=warp>30?T:quant(T);
+  // escapement state
+  let forkA,balA;
+  if(warp>30){const rt=t/1000;balA=4.2*amp*Math.sin(TAU*4*rt);forkA=.16*Math.sign(Math.sin(TAU*4*rt))*amp}
+  else{const n=Math.floor(T*8),f=T*8-n;forkA=(n%2?1:-1)*.16*(2*ease(Math.min(1,f/.25))-1)*Math.min(1,amp*1.2);balA=4.2*amp*Math.sin(TAU*4*T);
+    if(n!==lastBeat){lastBeat=n;if(running&&warp===1)tickSound()}}
+  // hands
+  ['hw','cw','dw'].forEach(id=>setHands(id,Tq));
+  // readouts
+  $('#hPR').textContent=Math.round(reserve);$('#hPRbar').firstElementChild.style.width=(reserve/72*100)+'%';$('#hPRbar').classList.toggle('low',reserve<8);
+  $('#cPR').textContent=Math.round(reserve)+' h';$('#cPRbar').style.width=(reserve/72*100)+'%';
+  $('#vt').textContent=fmt(T);
+  $('#stopMsg').textContent=running?'':'THE MAINSPRING HAS RUN DOWN. WIND IT TO RESTART.';
+  $('#wind').classList.toggle('pulse',reserve<6);
+  // movement layers
+  if(vis.mv){const c1=ctxs[1],c2=ctxs[2];c1.clearRect(0,0,1000,1000);drawTrain(c1,Tq,reserve);c2.clearRect(0,0,1000,1000);drawEsc(c2,Tq,forkA,balA)}
+  if(vis.cl){fctx.clearRect(0,0,1000,1000);drawPlate(fctx);drawTrain(fctx,Tq,reserve);drawEsc(fctx,Tq,forkA,balA);drawBridges(fctx);
+    if(lp){const k=flat.width/lp.w,zoom=3,lw=lc.width,src=lw/zoom;const lx=lc.getContext('2d');lx.fillStyle='#000';lx.fillRect(0,0,lw,lw);lx.drawImage(flat,lp.x*k-src/2,lp.y*k-src/2,src,src,0,0,lw,lw)}}
+  requestAnimationFrame(loop);
+}
+requestAnimationFrame(loop);choreo();
+
+/* ---------- configurator ---------- */
+function swatches(el,list,key,nameEl,bgf){
+  el.innerHTML=list.map((it,i)=>`<button class="sw${i===cfg[key]?' on':''}" aria-label="${it[0]}" style="background:${bgf(it)}"></button>`).join('');
+  [...el.children].forEach((b,i)=>b.onclick=()=>{cfg[key]=i;[...el.children].forEach(z=>z.classList.toggle('on',z===b));nameEl.textContent=list[i][0];mountWatches();refNo();const w=$('#cw');w.classList.add('pop');setTimeout(()=>w&&w.classList.remove('pop'),300)});
+  nameEl.textContent=list[cfg[key]][0];
+}
+function refNo(){$('#refNo').textContent=`REF. C01-${'SRGD'[cfg.case]}${cfg.dial+1}${cfg.strap+1} · ${CASES[cfg.case][0]} / ${DIALS[cfg.dial][0]} dial / ${STRAPS[cfg.strap][0]} strap`}
+swatches($('#sDial'),DIALS,'dial',$('#nDial'),it=>it[1]);
+swatches($('#sCase'),CASES,'case',$('#nCase'),it=>`linear-gradient(135deg,${it[1][0]},${it[1][1]} 45%,${it[1][2]} 65%,${it[1][3]})`);
+swatches($('#sStrap'),STRAPS,'strap',$('#nStrap'),it=>it[1]);
+refNo();
+
+/* ---------- hero extras ---------- */
+function gearD(R,T,m,holes){let d='';const ra=R+m,rd=R-1.25*m,s=TAU/T;for(let i=0;i<T;i++){const a=i*s;[[rd,a],[rd,a+s*.12],[ra,a+s*.3],[ra,a+s*.52],[rd,a+s*.7]].forEach(([r,an],j)=>{d+=(i||j?'L':'M')+(r*Math.cos(an)).toFixed(1)+' '+(r*Math.sin(an)).toFixed(1)})}d+='Z';
+  const ri=R-m*4,rh=R*.25;for(let k=0;k<holes;k++){const a0=k/holes*TAU+.2,a1=(k+1)/holes*TAU-.2;d+=`M${(ri*Math.cos(a0)).toFixed(1)} ${(ri*Math.sin(a0)).toFixed(1)}A${ri} ${ri} 0 0 1 ${(ri*Math.cos(a1)).toFixed(1)} ${(ri*Math.sin(a1)).toFixed(1)}L${(rh*Math.cos(a1)).toFixed(1)} ${(rh*Math.sin(a1)).toFixed(1)}A${rh} ${rh} 0 0 0 ${(rh*Math.cos(a0)).toFixed(1)} ${(rh*Math.sin(a0)).toFixed(1)}Z`}return d}
+const BG=[{x:520,y:480,R:300,T:100,m:7,h:6,r:1},{x:520+300+60,y:480+0,R:53,T:18,m:7,h:0,r:-100/18},{x:520-212-37,y:480+212+37,R:53,T:18,m:7,h:0,r:-100/18},{x:520+120,y:480-300-90,R:83,T:28,m:7,h:4,r:-100/28}];
+// place meshing: distance = R1+R2
+BG[1].x=BG[0].x+(BG[0].R+BG[1].R)*Math.cos(.35);BG[1].y=BG[0].y+(BG[0].R+BG[1].R)*Math.sin(.35);
+BG[2].x=BG[0].x+(BG[0].R+BG[2].R)*Math.cos(2.4);BG[2].y=BG[0].y+(BG[0].R+BG[2].R)*Math.sin(2.4);
+BG[3].x=BG[0].x+(BG[0].R+BG[3].R)*Math.cos(-1.9);BG[3].y=BG[0].y+(BG[0].R+BG[3].R)*Math.sin(-1.9);
+$('#bgGears').innerHTML=BG.map((g,i)=>`<g transform="translate(${g.x.toFixed(1)} ${g.y.toFixed(1)})"><path id="bg${i}" d="${gearD(g.R,g.T,g.m,g.h)}" fill="rgba(168,128,62,.05)" fill-rule="evenodd" stroke="rgba(168,128,62,.45)" stroke-width="1.5"/></g>`).join('');
+const hero=$('#hero');let tiltX=0,tiltY=0;
+hero.addEventListener('pointermove',e=>{const r=hero.getBoundingClientRect(),mx=(e.clientX-r.left)/r.width,my=(e.clientY-r.top)/r.height;hero.style.setProperty('--mx',mx*100+'%');hero.style.setProperty('--my',my*100+'%');tiltX=(mx-.7)*16;tiltY=(my-.5)*-12});
+hero.addEventListener('pointerleave',()=>{tiltX=0;tiltY=0});
+const dust=$('#dust'),dx=dust.getContext('2d');let motes=[];function dsize(){const d=Math.min(devicePixelRatio,2);dust.width=hero.clientWidth*d;dust.height=hero.clientHeight*d;dx.setTransform(d,0,0,d,0,0);motes=Array.from({length:70},()=>({x:Math.random()*hero.clientWidth,y:Math.random()*hero.clientHeight,r:Math.random()*2.2+.4,v:Math.random()*.3+.08,ph:Math.random()*6}))}dsize();addEventListener('resize',dsize);
+let heroVis=true;new IntersectionObserver(es=>heroVis=es[0].isIntersecting).observe(hero);
+let beatFlash=0,prevBeat=-1;
+function extras(t){
+  const ang=(T%60)*6;BG.forEach((g,i)=>{const el=$('#bg'+i);el&&el.setAttribute('transform',`rotate(${(ang*g.r*.1)%360})`)});
+  $('#heroWatch').style.transform=`rotateY(${tiltX}deg) rotateX(${tiltY}deg)`;
+  if(heroVis){const w=hero.clientWidth,h=hero.clientHeight;dx.clearRect(0,0,w,h);motes.forEach(m=>{m.y-=m.v;m.x+=Math.sin(t/1400+m.ph)*.25;if(m.y<-5){m.y=h+5;m.x=Math.random()*w}dx.fillStyle=`rgba(190,140,60,${.25+.35*Math.abs(Math.sin(t/900+m.ph))})`;dx.beginPath();dx.arc(m.x,m.y,m.r,0,TAU);dx.fill()})}
+  const y=scrollY;$('#band1').style.transform=`translateX(${-(y*.5)%1600}px)`;$('#band2').style.transform=`translateX(${((y*.35)%1600)-1600}px)`;
+  const n=Math.floor(T*8);if(n!==prevBeat&&running){prevBeat=n;beatFlash=1;const bs=$$('.band .beat');bs.forEach((b,i)=>b.classList.toggle('on',i===n%2))}
+  beatFlash*=.85;
+  requestAnimationFrame(extras)}
+requestAnimationFrame(extras);
+
+/* ---------- misc ---------- */
+const tkTxt='28,800 BEATS PER HOUR  ✦  72-HOUR POWER RESERVE  ✦  31 JEWELS  ✦  214 COMPONENTS  ✦  CÔTES DE GENÈVE  ✦  BLUED SCREWS  ✦  DESIGN CONCEPT  ✦  ';$('#tk').textContent=tkTxt.repeat(6);
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);e.target.querySelectorAll('[data-n]').forEach(b=>{const n=+b.dataset.n,t0=performance.now();(function f(t){const k=Math.min(1,(t-t0)/1800),v=Math.round(n*ease(k));b.textContent=b.dataset.c?v.toLocaleString():v;if(k<1)requestAnimationFrame(f)})(t0)})}}),{threshold:.15});
+$$('.rv').forEach(el=>io.observe(el));
+addEventListener('scroll',()=>{const y=scrollY;$('.bgNum').style.transform=`translateY(calc(-50% + ${y*.25}px))`},{passive:true});
+setTimeout(()=>document.body.classList.add('open'),reduce?0:500);
+</script>
+</body>
+</html>

@@ -17,7 +17,7 @@ p{margin:0;color:#CFE3D6}
 small{display:block;margin-top:18px;color:#8FB3A0;font-size:13px}
 @media (prefers-reduced-motion:reduce){*{animation:none!important}}
 </style></head><body>
-<div class="board">
+<div class="board" id="ct-maint">
   <span class="logo"><span>chalk</span><span>talk</span></span>
   <h1>Undergoing an update</h1>
   <p>We're adding new things to Chalk Talk. It'll be back in a few minutes, and nothing you've saved is affected.</p>
@@ -26,6 +26,31 @@ small{display:block;margin-top:18px;color:#8FB3A0;font-size:13px}
   <span class="dust" style="left:20%"></span><span class="dust" style="left:48%;animation-delay:1s"></span><span class="dust" style="left:76%;animation-delay:2s"></span>
 </div>
 <script>
-// Try again every 30 seconds. On Chalk Talk's own address this reloads; anywhere else it goes back to Chalk Talk.
-setInterval(function () { if (/chalktalkstudy\.com$/.test(location.hostname)) location.reload(); else location.href = 'https://chalktalkstudy.com/'; }, 30000);
+(function () {
+  // Render shows this page for every site on the Chalk Talk server while it updates (chalktalkstudy.com, leyaglazer.com, readyroomcerts.com...).
+  var host = location.hostname.replace(/^www\./, '');
+  if (host === 'leyaglazer.com' && !/^\/(hq|proposal|mockup)/.test(location.pathname)) {
+    // Leya's portfolio: show the portfolio itself (static copy) instead of an update notice.
+    document.title = 'Leya Glazer';
+    document.body.innerHTML = '';
+    document.body.style.cssText = 'margin:0;padding:0;overflow:hidden;display:block;background:#fff';
+    var f = document.createElement('iframe');
+    f.src = 'https://fieldlinephysics.com/portfolio' + (location.pathname || '/') + location.search + location.hash;
+    f.title = 'Leya Glazer';
+    f.style.cssText = 'position:fixed;inset:0;width:100%;height:100%;border:0';
+    document.body.appendChild(f);
+  } else if (!/chalktalkstudy\.com$/.test(host)) {
+    // Another site on the same server: keep its own name, no Chalk Talk branding.
+    var name = host === 'leyaglazer.com' ? 'This page' : host === 'readyroomcerts.com' ? 'Ready Room' : host;
+    document.title = name + ' is updating';
+    var logo = document.querySelector('.logo'); if (logo) logo.style.display = 'none';
+    var pp = document.querySelector('.board p'); if (pp) pp.textContent = name + ' will be back in a few minutes. Nothing you\'ve saved is affected.';
+  }
+  // Every 30 seconds, check whether the update is done; reload this same address once the real site answers.
+  setInterval(function () {
+    fetch(location.href, { cache: 'no-store' }).then(function (r) { return r.text(); }).then(function (t) {
+      if (t.indexOf('id="ct-maint"') < 0) location.reload();
+    }).catch(function () {});
+  }, 30000);
+})();
 </script></body></html>
